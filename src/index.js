@@ -1,9 +1,11 @@
 const express = require('express'); 
-require('./db/mongoose');
+const connectDB = require('./db/mongoose');
 const userRouter = require('./routers/users');
 const adminRouter = require('./routers/admin');
 const quotesRouter = require('./routers/quotes');
 const buildingRouter = require('./routers/services/building');
+
+connectDB();
 
 const app = express();
 const port = process.env.PORT;
