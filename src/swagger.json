@@ -18,7 +18,7 @@
     "tags": [
         {
             "name": "User",
-            "description": "API for cats in the system"
+            "description": "API for Users in the system"
         }
     ],
     "consumes": [
@@ -87,7 +87,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "User profile",
+                "summary": "User view profile",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -130,7 +130,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "User profile",
+                "summary": "User login profile",
                 "parameters": [
                     {
                         "in": "body",
