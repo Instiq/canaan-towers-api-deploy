@@ -51,7 +51,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Users registers in system",
+                "summary": "User registers in system",
                 "parameters": [
                     {
                         "in": "body",
