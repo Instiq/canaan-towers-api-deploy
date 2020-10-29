@@ -91,7 +91,7 @@ router.delete('/users/profile', auth, async (req, res) => {
         sendCancelationEmail(req.user.email, req.user.firstname)
         res.send(req.user)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).send() 
     }
 })
 
