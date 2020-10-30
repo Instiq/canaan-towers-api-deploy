@@ -112,8 +112,9 @@ const upload = multer({
     }
 })
 
-router.post('/admin/upload', authAdmin, upload.single('avatar'), async (req, res) => {
-    req.admin.avatar = req.file.buffer
+router.post('/admin/upload', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
+    req.admin.carousel = req.files['carousel'];
+    req.admin.slider = req.files['slider'];
     await req.admin.save()
     res.send('Upload successful')
 }, (error, req, res, next) => {
@@ -126,16 +127,16 @@ router.delete('/admin/upload', authAdmin, async (req, res) => {
     res.send()
 })
 
-router.get('/admin/:id/avatar', async (req, res) => {
+router.get('/admin/:id', async (req, res) => {
     try {
         const admin = await Admin.findById(req.params.id)
 
-        if (!admin || !admin.avatar) {
+        if (!admin) {
             throw new Error()
         }
 
-        res.set('Content-Type', 'image/jpg')
-        res.status(200).send(admin.avatar)
+        // res.set('Content-Type', 'image/png')
+        res.status(200).send(admin.carousel[0].buffer)
     } catch (e) {
         res.status(404).send()
     }

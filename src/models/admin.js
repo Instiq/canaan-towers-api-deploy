@@ -53,9 +53,8 @@ const adminSchema = new mongoose.Schema({
             required: true
         }
     }],
-    avatar: {
-        type: Buffer
-    },
+    carousel: [],
+    slider:[],
     role: {
        type: String,
        required: true 

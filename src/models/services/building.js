@@ -10,6 +10,8 @@ const Building = mongoose.model('Building', {
         type: String,
         required: true,
     },
+    carousel: [],
+    slider: []
 })
 
 module.exports = Building;

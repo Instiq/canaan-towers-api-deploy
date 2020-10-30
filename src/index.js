@@ -1,5 +1,6 @@
 const express = require('express'); 
 const connectDB = require('./db/mongoose');
+const cors = require('cors')
 const userRouter = require('./routers/users');
 const adminRouter = require('./routers/admin');
 const quotesRouter = require('./routers/quotes');
@@ -13,6 +14,8 @@ connectDB();
 const app = express();
 const port = process.env.PORT;
 
+
+app.use(cors())
 app.use(express.json({ extended: false }))
 app.use(userRouter)
 app.use(adminRouter)

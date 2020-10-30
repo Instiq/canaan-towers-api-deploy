@@ -37,6 +37,7 @@ router.get('/admin/quotes', authAdmin, async (req, res) => {
     }
 })
 
+// View all your quotes
 router.get('/quotes', auth, async (req, res) => {
     try {
         await req.user.populate('quotes').execPopulate()
@@ -46,6 +47,7 @@ router.get('/quotes', auth, async (req, res) => {
     }
 })
 
+// View a single quote
 router.get('/quotes/:id', auth, async (req, res) => { 
     const _id = req.params.id
 
