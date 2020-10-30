@@ -197,8 +197,6 @@
             }
         }
 
-        
-
 
     },
     "components": {
@@ -206,19 +204,19 @@
         "UserRegistrationModel": {
           "required": [
             "email",
-            "firstName",
-            "lastName",
+            "firstname",
+            "lastname",
             "password",
-            "phoneNumber"
+            "number"
           ],
           "type": "object",
           "properties": {
-            "firstName": {
+            "firstname": {
               "maxLength": 100,
               "minLength": 2,
               "type": "string"
             },
-            "lastName": {
+            "lastname": {
               "maxLength": 100,
               "minLength": 2,
               "type": "string"
@@ -227,7 +225,7 @@
               "type": "string",
               "format": "email"
             },
-            "phoneNumber": {
+            "number": {
               "maxLength": 14,
               "minLength": 14,
               "type": "string"
@@ -245,11 +243,11 @@
               "type": "string",
               "format": "uuid"
             },
-            "firstName": {
+            "firsname": {
               "type": "string",
               "nullable": true
             },
-            "lastName": {
+            "lastname": {
               "type": "string",
               "nullable": true
             },
@@ -294,11 +292,11 @@
               "type": "string",
               "format": "uuid"
             },
-            "firstName": {
+            "firstname": {
               "type": "string",
               "nullable": true
             },
-            "lastName": {
+            "lastname": {
               "type": "string",
               "nullable": true
             },
@@ -306,7 +304,7 @@
               "type": "string",
               "nullable": true
             },
-            "phoneNumber": {
+            "number": {
               "type": "string",
               "nullable": true
             }
