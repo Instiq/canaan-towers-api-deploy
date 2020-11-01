@@ -9,7 +9,7 @@ const router = new express.Router()
 // Quotes Endpoint
 router.post('/quotes', auth, async (req, res) => {
     const quotes = new Quotes({
-        ...req.body,
+        ...req.body, 
         owner: req.user._id
     })
 
@@ -22,7 +22,6 @@ router.post('/quotes', auth, async (req, res) => {
     }
 }) 
 
-// THis returns all the quotes and it should  only be avalilBLE TO THE ADNMMINF and whT YIOU CAN DO IS THAT ADD the id of the admin in the documnent and make sure for before yhou return all the quotes you m ust be signed in to the route with the admin id *!!!!!!!
 router.get('/admin/quotes', authAdmin, async (req, res) => {
     try {
         // const quotes = await Quotes.find({}) 

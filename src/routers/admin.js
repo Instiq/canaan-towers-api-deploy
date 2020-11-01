@@ -98,8 +98,19 @@ router.delete('/admin/profile', authAdmin, async (req, res) => {
     }
 })
 
+// multer for handling image upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}${file.originalname}` );
+  }
+});
+
 
 const upload = multer({
+    storage: storage,
     limits: {
         fileSize: 1000000
     },
@@ -113,10 +124,31 @@ const upload = multer({
 })
 
 router.post('/admin/upload', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    req.admin.carousel = req.files['carousel'];
-    req.admin.slider = req.files['slider'];
+    console.log(req.files.carousel, 'omo')
+    if(req.files){
+            if(req.files.carousel) {
+                let carousels = [];
+                req.files.carousel.forEach(photo => {
+                    let url = `http:localhost:5000/${photo.filename}`
+                    carousels.push(url);
+                }); 
+
+                req.admin.carousel = carousels;
+            }
+    }
+
     await req.admin.save()
-    res.send('Upload successful')
+    res.send({
+        success: 1,
+        url: `http:localhost:5000/images/${req.files.carousel[0].filename}`
+    })
+
+
+
+    // req.admin.carousel = req.files['carousel'];
+    // req.admin.slider = req.files['slider'];
+    // await req.admin.save()
+    // res.send('Upload successful')
 }, (error, req, res, next) => {
     res.status(400).send({ error: error.message })
 })
@@ -136,7 +168,7 @@ router.get('/admin/:id', async (req, res) => {
         }
 
         // res.set('Content-Type', 'image/png')
-        res.status(200).send(admin.carousel[0].buffer)
+        res.status(200).send(admin)
     } catch (e) {
         res.status(404).send()
     }

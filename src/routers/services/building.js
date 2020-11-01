@@ -6,7 +6,18 @@ const authAdmin = require('../../middleware/authAdmin')
 const router = new express.Router() 
 
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}${file.originalname}` );
+  }
+});
+
+
 const upload = multer({
+    storage: storage,
     limits: {
         fileSize: 1000000
     },
@@ -19,20 +30,35 @@ const upload = multer({
     }
 })
 
-// router.post('/admin/upload', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-//     req.admin.carousel = req.files['carousel'];
-//     req.admin.slider = req.files['slider'];
-//     await req.admin.save()
-//     res.send('Upload successful')
-// }, (error, req, res, next) => {
-//     res.status(400).send({ error: error.message })
-// })
-
 // Building Endpoint
 router.post('/building', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    const building = new Building({...req.body, carousel: req.files.carousel, slider: req.files.slider })
-    await building.save()
-    res.status(201).send(building)
+    if(req.files){
+            if(req.files.carousel) {
+                let carousels = [];
+                req.files.carousel.forEach(photo => {
+                    let url = `http:localhost:5000/${photo.filename}`
+                    carousels.push(url);
+                }); 
+
+                carousel = carousels;
+            }
+            if(req.files.slider) {
+                let sliders = [];
+                req.files.slider.forEach(photo => {
+                    let url = `http:localhost:5000/${photo.filename}`
+                    sliders.push(url);
+                }); 
+
+                slider = sliders;
+            }
+    }
+    const building = new Building({...req.body, carousel, slider })
+    try {
+        await building.save()
+        res.status(201).send(building)
+    } catch (error) {
+        res.status(400).send(error)
+    }
 }, (error, req, res, next) => {
     res.status(400).send({ error: error.message })
 })

@@ -6,10 +6,6 @@ const Building = mongoose.model('Building', {
         required: true,
         trim: true
     },
-    images: {
-        type: String,
-        required: true,
-    },
     carousel: [],
     slider: []
 })

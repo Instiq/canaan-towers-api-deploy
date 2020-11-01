@@ -15,12 +15,16 @@
         },
         "version": "v1"
     },
-    "host": "canaan-towers-api.herokuapp.com/",
+    "host": "localhost:5000",
     "basePath": "",
     "tags": [
         {
             "name": "User",
             "description": "API for Users in the system"
+        },
+        {
+            "name": "Quotes",
+            "description": "API for Quote request in the system"
         }
     ],
     "consumes": [
@@ -182,22 +186,183 @@
                     "User"
                 ],
                 "summary": "User deletes profile",
+                "requestBody": {
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "$ref": "#/components/schemas/UserRegistrationModel"
+                          }
+                        }
+                      }
+                  },
+                  "responses": {
+                      "200": {
+                        "description": "Success",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "$ref": "#/components/schemas/UserInfo"
+                            }
+                          }
+                        }
+                      }
+                  },
+                  "summary": "User registers in system"
+            }
+        },
+        "/quotes": {
+            "post": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "User makes quote request",
+                "requestBody": {
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "$ref": "#/components/schemas/QuoteRequestModel"
+                        }
+                      }
+                    }
+                },
                 "responses": {
                     "200": {
                       "description": "Success",
                       "content": {
                         "application/json": {
                           "schema": {
-                            "$ref": "#/components/schemas/UserInfo"
+                            "$ref": "#/components/schemas/QuoteResponse"
+                          }
+                        }
+                      }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Quotes"
+                ],
+                "summary": "User views quotes",
+                "responses": {
+                    "200": {
+                      "description": "Success",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "$ref": "#/components/schemas/QuoteResponse"
                           }
                         }
                       }
                     }
                 }
             }
+        },
+        "/quotes/{quoteId}": {
+          "get": {
+            "tags": [
+              "Quotes"
+            ],
+            "summary": "User views single quote",
+            "parameters": [
+              {
+                "name": "quoteId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/QuoteResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "patch": {
+            "tags": [
+              "Quotes"
+            ],
+            "summary": "User updates his quotes",
+            "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/QuoteRequestModel"
+                      }
+                    }
+                  }
+              },
+            "responses": {
+                "200": {
+                  "description": "Success",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/QuoteResponse"
+                      }
+                    }
+                  }
+                }
+            }
+          },
+          "delete": {
+            "tags": [
+              "Quotes"
+            ],
+            "parameters": [
+              {
+                "name": "quoteId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/QuoteResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
-
-
     },
     "components": {
       "schemas": {
@@ -320,6 +485,55 @@
             "token": {
                 "type": "string",
                 "nullable": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "QuoteRequestModel": {
+          "required": [
+            "email",
+            "number",
+            "message"
+          ],
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "number": {
+              "maxLength": 14,
+              "minLength": 14,
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "QuoteResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "email": {
+              "type": "string",
+              "nullable": true
+            },
+            "number": {
+              "type": "string",
+              "nullable": true
+            },
+            "message": {
+              "type": "string",
+              "nullable": true
+            },
+            "owner": {
+              "type": "string",
+              "format": "uuid"
             }
           },
           "additionalProperties": false
