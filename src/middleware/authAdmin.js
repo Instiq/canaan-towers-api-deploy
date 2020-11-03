@@ -14,7 +14,7 @@ const authAdmin = async (req, res, next) => {
 
         req.token = token
         req.admin = admin
-        next()
+        next() 
     
     } catch (e) {
         res.status(401).send({ error: 'Please authenticate.' })

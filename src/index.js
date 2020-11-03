@@ -5,6 +5,11 @@ const userRouter = require('./routers/users');
 const adminRouter = require('./routers/admin');
 const quotesRouter = require('./routers/quotes');
 const buildingRouter = require('./routers/services/building');
+const furnishRouter = require('./routers/services/furnishing');
+const automobileRouter = require('./routers/services/automobile');
+const powerRouter = require('./routers/services/power');
+const roadworkRouter = require('./routers/services/roadworks');
+const roofRouter = require('./routers/services/roof');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
@@ -22,6 +27,11 @@ app.use(userRouter)
 app.use(adminRouter)
 app.use(quotesRouter)
 app.use(buildingRouter)
+app.use(furnishRouter)
+app.use(automobileRouter)
+app.use(powerRouter)
+app.use(roadworkRouter)
+app.use(roofRouter)
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 

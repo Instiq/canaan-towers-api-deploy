@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Roadworks = mongoose.model('Roadworks', { 
+const Power = mongoose.model('Power', { 
     description: {
         type: String,
         required: true,
@@ -10,4 +10,4 @@ const Roadworks = mongoose.model('Roadworks', {
     slider: []
 })
 
-module.exports = Roadworks;
+module.exports = Power;

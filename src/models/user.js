@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.virtual('quotes', {
     ref: 'Quotes',
-    localField: '_id',
+    localField: ['_id'],
     foreignField: 'owner'
 }) 
 
@@ -101,7 +101,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 // Hash the plain text password before saving
 userSchema.pre('save', async function (next) {
     const user = this
-    
+     
     console.log('only checking')
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)

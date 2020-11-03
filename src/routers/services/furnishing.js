@@ -1,13 +1,12 @@
 const express = require('express')
-const Building = require('../../models/services/building')
-const Admin = require('../../models/admin')
+const Furnishing = require('../../models/services/furnishing')
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const router = new express.Router() 
 
 
-// Building Endpoint
-router.post('/building', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
+// Create Service Endpoint
+router.post('/furnish', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
     if(req.files){
             if(req.files.carousel) {
                 let carousels = [];
@@ -28,10 +27,10 @@ router.post('/building', authAdmin, upload.fields([{ name: 'carousel', maxCount:
                 slider = sliders;
             }
     }
-    const building = new Building({...req.body, carousel, slider })
+    const furnishing = new Furnishing({...req.body, carousel, slider })
     try {
-        await building.save()
-        res.status(201).send(building)
+        await furnishing.save()
+        res.status(201).send(furnishing)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -39,43 +38,23 @@ router.post('/building', authAdmin, upload.fields([{ name: 'carousel', maxCount:
     res.status(400).send({ error: error.message })
 })
 
-
-router.get('/building', async (req, res) => {
+// View Service
+router.get('/furnish', async (req, res) => {
     try {
-        const building = await Building.find({})
-        // const admin = await Admin.findOne({ 'role': '1'})
-        // console.log(admin.role);
-        // let adminrole = admin.role = '1'
-        // console.log(adminrole)
-
-        // if(!adminrole) {
-        //     res.status(400).send()
-        // }
-
-        res.send(building)
+        const furnishing = await Furnishing.find({})
+        res.send(furnishing)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
-router.get('/building/:id', async (req, res) => {
-    const _id = req.params.id
 
-    try {
-        const building = await Building.findById(_id)
-        if (!building) {
-            return res.status(404).send()
-        }
-
-        res.send(building)
-    } catch (e) {
-        res.status(500).send('Error occured')
-    }
-})
-
-router.patch('/building/:id', async (req, res) => {
+// Update service 
+// NB: You need to update this so that the admin doesnt need to put the id, 
+// idea you can actually find all the furnish service since it is one then you update it with found
+router.patch('/furnish/:id', authAdmin, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['description', 'images']
+    const allowedUpdates = ['description', 'carousel', 'slider']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
     console.log(isValidOperation);
 
@@ -84,31 +63,30 @@ router.patch('/building/:id', async (req, res) => {
     }
 
     try {
-        const building = await Building.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const furnishing = await Furnishing.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!building) {
+        if (!furnishing) {
             return res.status(404).send()
         }
 
-        res.send(building)
+        res.send(furnishing)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-router.delete('/building/:id', async (req, res) => {
+// Delete service
+router.delete('/furnish/:id', authAdmin, async (req, res) => {
     try {
-        const building = await Building.findByIdAndDelete(req.params.id)
+        const furnishing = await Furnishing.findByIdAndDelete(req.params.id)
 
-        if (!building) {
+        if (!furnishing) {
             return res.status(404).send()
         }
-
-        res.send(building)
+        res.send(furnishing)
     } catch (e) {
         res.status(500).send()
     }
 })
-
 
 module.exports = router

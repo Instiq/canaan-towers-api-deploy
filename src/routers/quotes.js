@@ -3,16 +3,33 @@ const Quotes = require('../models/quotes')
 const Admin = require('../models/admin')
 const auth = require('../middleware/auth')
 const authAdmin = require('../middleware/authAdmin')
-const router = new express.Router()  
+const router = new express.Router()   
+
+
+// const main = async () => {
+//     const quotes = await Quotes.findById('5fa01424aab6f33948b68866')
+//     await quotes.populate('owner').execPopulate()
+//     delete quotes.owner.firstname;
+//     // console.log(quotes.owner)
+//     quoteUser = {...quotes}
+//     delete quoteUser._doc._id
+// }
+
+// main()
+
 
 
 // Quotes Endpoint
 router.post('/quotes', auth, async (req, res) => {
+    // delete (req.user.tokens)
+    console.log(req.user)
+    let user = {...req.user}
+    delete user._doc.tokens
+    delete user._doc.password
     const quotes = new Quotes({
-        ...req.body, 
-        owner: req.user._id
+        ...req.body,
+        person: user._doc
     })
-
 
     try {
         await quotes.save()
@@ -22,22 +39,23 @@ router.post('/quotes', auth, async (req, res) => {
     }
 }) 
 
-router.get('/admin/quotes', authAdmin, async (req, res) => {
+router.get('/admins', authAdmin, async (req, res) => {
     try {
-        // const quotes = await Quotes.find({}) 
-        const permission = await Admin.findOne({ 'role': '1' })
+        const quotes = await Quotes.find({})
+        // const permission = await Admin.findOne({ 'role': '1' })
         // console.log('hello', req.headers)
         // if(!permission) {
         //     res.status(400).send()
         // }
-        res.send('quotes')
+        console.log('123')
+        res.send(quotes)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
 // View all your quotes
-router.get('/quotes', auth, async (req, res) => {
+router.get('/quotes/yours', auth, async (req, res) => {
     try {
         await req.user.populate('quotes').execPopulate()
         res.send(req.user.quotes)

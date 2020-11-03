@@ -19,7 +19,7 @@ const Quotes = mongoose.model('Quotes', {
         trim: true,
         validate(value) {
             if (value < 11) {
-                throw new Error('Invalid phone number')
+                throw new Error('Invalid phone number') 
             }
         }
     },
@@ -34,8 +34,10 @@ const Quotes = mongoose.model('Quotes', {
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'User'
+    },
+    person: {
+        type: []
     }
 })
 
