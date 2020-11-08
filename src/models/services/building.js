@@ -1,13 +1,27 @@
 const mongoose = require('mongoose');
 
-const Building = mongoose.model('Building', { 
-    description: {
+
+const BuildingCarousel = mongoose.model('BuildingCarousel', { 
+    carousel: {
+        type: String
+    }
+}) 
+
+const BuildSlider = mongoose.model('BuildSlider', { 
+    images: { 
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
-    carousel: [],
-    slider: []
+    title: { 
+        type: String,
+        required: true
+    },
+    description: { 
+        type: String,
+        required: true
+    }
 })
 
-module.exports = Building;
+
+module.exports = { BuildingCarousel, BuildSlider };
+

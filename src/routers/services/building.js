@@ -1,37 +1,26 @@
 const express = require('express')
-const Building = require('../../models/services/building')
-const Admin = require('../../models/admin')
+const { BuildSlider, BuildingCarousel }  = require('../../models/services/building')
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const router = new express.Router() 
 
 
-// Building Endpoint
-router.post('/building', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    if(req.files){
-            if(req.files.carousel) {
-                let carousels = [];
-                req.files.carousel.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    carousels.push(url);
-                }); 
-
-                carousel = carousels;
-            }
-            if(req.files.slider) {
-                let sliders = [];
-                req.files.slider.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    sliders.push(url);
-                }); 
-
-                slider = sliders;
-            }
+// Add Carousel
+router.post('/building/carousel', authAdmin, upload.single('image'), async (req, res) => {
+    console.log(req.file)
+    if(!req.file) {
+        res.status(400).send('You need to upload an image')
+        process.exit(1)
     }
-    const building = new Building({...req.body, carousel, slider })
+
+    const buildingCarousel = new BuildingCarousel({
+        carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+    })
+
+
     try {
-        await building.save()
-        res.status(201).send(building)
+        await buildingCarousel.save()
+        res.status(201).send(buildingCarousel)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -39,76 +28,133 @@ router.post('/building', authAdmin, upload.fields([{ name: 'carousel', maxCount:
     res.status(400).send({ error: error.message })
 })
 
+// Add Project
+router.post('/building/slider', authAdmin, upload.single('image'), async (req, res) => {
+    console.log(req.file)
+    if(!req.file) {
+        res.status(400).send('Upload threee images')
+        process.exit(1)
+    }
+    const buildingslider = new BuildSlider({
+        ...req.body,
+        images: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+        title: req.body.title,
+        description: req.body.description
+    })
 
-router.get('/building', async (req, res) => {
     try {
-        const building = await Building.find({})
-        // const admin = await Admin.findOne({ 'role': '1'})
-        // console.log(admin.role);
-        // let adminrole = admin.role = '1'
-        // console.log(adminrole)
+        await buildingslider.save()
+        res.status(201).send(buildingslider)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
 
-        // if(!adminrole) {
-        //     res.status(400).send()
-        // }
+// View projects
+router.get('/building/slider', async (req, res) => {
+    try {
+        const buildSlider = await BuildSlider.find({})
 
-        res.send(building)
+        res.send(buildSlider)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
-router.get('/building/:id', async (req, res) => {
-    const _id = req.params.id
-
+// view carousels
+router.get('/building/carousel', async (req, res) => {
     try {
-        const building = await Building.findById(_id)
-        if (!building) {
-            return res.status(404).send()
-        }
+        const buildingCarousel = await BuildingCarousel.find({})
 
-        res.send(building)
+        res.send(buildingCarousel)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
-router.patch('/building/:id', async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['description', 'images']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log(isValidOperation);
 
-    if (!isValidOperation) {
+// Updates Carousel
+router.patch('/building/carousel/:id', authAdmin, upload.single('image'), async (req, res) => {
+    if (!req.file || req.file.length > 1) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
 
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, carousel: image }
+
     try {
-        const building = await Building.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const buildingCarousel = await BuildingCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!building) {
+        if (!buildingCarousel) {
             return res.status(404).send()
         }
-
-        res.send(building)
+        await buildingCarousel.save()
+        res.send(buildingCarousel)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-router.delete('/building/:id', async (req, res) => {
-    try {
-        const building = await Building.findByIdAndDelete(req.params.id)
 
-        if (!building) {
+// Update Slider
+router.patch('/building/slider/:id', authAdmin, upload.single('image'), async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['title', 'description']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    console.log(isValidOperation);
+
+    if (!isValidOperation || !req.file) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, images: image }
+    
+    try {
+        const buildSlider = await BuildSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!buildSlider) {
             return res.status(404).send()
         }
+        await buildSlider.save()
+        res.send(buildSlider)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
 
-        res.send(building)
+// Delete Carousel
+router.delete('/building/carousel/:id', authAdmin, async (req, res) => {
+    try {
+        const buildingCarousel = await BuildingCarousel.findByIdAndDelete(req.params.id)
+
+        if (!buildingCarousel) {
+            return res.status(404).send()
+        }
+        buildingCarousel.remove()
+        res.send(buildingCarousel)
     } catch (e) {
         res.status(500).send()
     }
 })
 
+router.delete('/building/slider/:id', authAdmin, async (req, res) => {
+    try {
+        const buildSlider = await BuildSlider.findByIdAndDelete(req.params.id)
+
+        if (!buildSlider) {
+            return res.status(404).send()
+        }
+        buildSlider.remove()
+        res.send(buildSlider)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
 
 module.exports = router

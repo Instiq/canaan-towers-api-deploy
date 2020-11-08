@@ -16,6 +16,67 @@ router.post('/admin', async (req, res) => {
     }
 })
 
+
+// Create subadmin
+router.post('/admin/create', authAdmin, async (req, res) => {
+    const admin = new Admin({ ...req.body, role: '2', active: true})
+    try {
+        await admin.save()
+        const token = await admin.generateAuthToken()
+        res.status(201).send({ admin, token })
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+// Revoke Subdmin access
+router.patch('/admin/revoke/:id', authAdmin, async (req, res) => { 
+    try {
+        const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
+        if(!permission) {
+            res.status(401).send()
+        }
+
+        req.body.active = false;
+
+        const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!admin) {
+            return res.status(404).send()
+        }
+
+        await admin.save()
+        res.send(admin)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+// Make Admin Active
+router.patch('/admin/active/:id', authAdmin, async (req, res) => { 
+    try {
+        console.log(req.params.id)
+        const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
+        if(!permission) {
+            res.status(401).send()
+        }
+
+        req.body.active = true;
+
+        const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!admin) {
+            return res.status(404).send()
+        }
+
+        await admin.save()
+        res.send(admin)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+
 router.post('/admin/login', async (req, res) => {
     try {
         const admin = await Admin.findByCredentials(req.body.email, req.body.password)
@@ -26,25 +87,30 @@ router.post('/admin/login', async (req, res) => {
     }
 })
 
-
+// View all subadmins
 router.get('/admins', authAdmin, async (req, res) => { 
     try {
-        const permission = await Admin.findOne({ 'role': '1' })
-        console.log(permission)
+        console.log(req.id)
+        const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
         if(!permission) {
             res.status(400).send()
         }
 
-        const admin = await Admin.find({})
+        const admin = await Admin.find({ 'role': '2'})
         res.send(admin)
     } catch (e) {
         res.status(500).send()
     }
 })
 
+
+
+
+// View your profile
 router.get('/admin/profile', authAdmin, async (req, res) => { 
     res.send(req.admin)
 })
+
 
 router.post('/admin/logout', authAdmin, async (req, res) => {
     try {
@@ -69,7 +135,7 @@ router.post('/admin/logout/all', authAdmin, async (req, res) => {
     }
 })
 
-
+// Update profile
 router.patch('/admin/profile', authAdmin, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['firstname','lastname', 'email', 'password', 'number']
@@ -98,60 +164,8 @@ router.delete('/admin/profile', authAdmin, async (req, res) => {
     }
 })
 
-// multer for handling image upload
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}${file.originalname}` );
-  }
-});
 
 
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-
-        cb(undefined, true)
-    }
-})
-
-router.post('/admin/upload', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    console.log(req.files.carousel, 'omo')
-    if(req.files){
-            if(req.files.carousel) {
-                let carousels = [];
-                req.files.carousel.forEach(photo => {
-                    let url = `http:localhost:5000/${photo.filename}`
-                    carousels.push(url);
-                }); 
-
-                req.admin.carousel = carousels;
-            }
-    }
-
-    await req.admin.save()
-    res.send({
-        success: 1,
-        url: `http:localhost:5000/images/${req.files.carousel[0].filename}`
-    })
-
-
-
-    // req.admin.carousel = req.files['carousel'];
-    // req.admin.slider = req.files['slider'];
-    // await req.admin.save()
-    // res.send('Upload successful')
-}, (error, req, res, next) => {
-    res.status(400).send({ error: error.message })
-})
 
 router.delete('/admin/upload', authAdmin, async (req, res) => {
     req.admin.avatar = undefined

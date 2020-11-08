@@ -12,6 +12,7 @@ const authAdmin = async (req, res, next) => {
             throw new Error()
         }
 
+        req.id = decoded._id
         req.token = token
         req.admin = admin
         next() 

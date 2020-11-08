@@ -1,13 +1,26 @@
 const mongoose = require('mongoose');
 
-const Roadworks = mongoose.model('Roadworks', { 
-    description: {
+const RoadCarousel = mongoose.model('roadCarousel', { 
+    carousel: {
+        type: String
+    }
+}) 
+
+const RoadSlider = mongoose.model('roadSlider', { 
+    image: { 
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
-    carousel: [],
-    slider: []
+    title: { 
+        type: String,
+        required: true
+    },
+    description: { 
+        type: String,
+        required: true
+    }
 })
 
-module.exports = Roadworks;
+
+module.exports = { RoadCarousel, RoadSlider };
+

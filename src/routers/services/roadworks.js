@@ -1,35 +1,26 @@
 const express = require('express')
-const Roadworks = require('../../models/services/roadworks')
+const { RoadCarousel, RoadSlider}  = require('../../models/services/roadworks')
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const router = new express.Router() 
 
 
-// Create Service Endpoint
-router.post('/roadworks', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    if(req.files){
-            if(req.files.carousel) {
-                let carousels = [];
-                req.files.carousel.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    carousels.push(url);
-                }); 
-
-                carousel = carousels;
-            }
-            if(req.files.slider) {
-                let sliders = [];
-                req.files.slider.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    sliders.push(url);
-                }); 
-                slider = sliders;
-            }
+// Add Carousel
+router.post('/road/carousel', authAdmin, upload.single('image'), async (req, res) => {
+    console.log(req.file)
+    if(!req.file) {
+        res.status(400).send('You need to upload an image')
+        process.exit(1)
     }
-    const roadworks = new Roadworks({...req.body, carousel, slider })
+
+    const roadCarousel = new RoadCarousel({
+        carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+    })
+
+
     try {
-        await roadworks.save()
-        res.status(201).send(roadworks)
+        await roadCarousel.save()
+        res.status(201).send(roadCarousel)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -37,52 +28,130 @@ router.post('/roadworks', authAdmin, upload.fields([{ name: 'carousel', maxCount
     res.status(400).send({ error: error.message })
 })
 
-// View Service
-router.get('/roadworks', async (req, res) => {
+
+// Add Project
+router.post('/road/slider', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('Upload threee images')
+        process.exit(1)
+    }
+    const roadslider = new RoadSlider({
+        ...req.body,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+        title: req.body.title,
+        description: req.body.description
+    })
+
     try {
-        const roadworks = await Roadworks.find({})
-        res.send(roadworks)
+        await roadslider.save()
+        res.status(201).send(roadslider)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+
+// View projects
+router.get('/road/slider', async (req, res) => {
+    try {
+        const roadSlider = await RoadSlider.find({})
+
+        res.send(roadSlider)
+    } catch (e) {
+        res.status(500).send('Error occured')
+    }
+})
+
+// view carousels
+router.get('/road/carousel', async (req, res) => {
+    try {
+        const roadCarousel = await RoadCarousel.find({})
+
+        res.send(roadCarousel)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
 
-// Update service 
-// NB: You need to update this so that the admin doesnt need to put the id, 
-// idea you can actually find all the roadworks service since it is one then you update it with found
-router.patch('/roadworks/:id', authAdmin, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['description', 'carousel', 'slider']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log(isValidOperation);
-
-    if (!isValidOperation) {
+// Updates Carousel
+router.patch('/road/carousel/:id', authAdmin, upload.single('image'), async (req, res) => {
+    if (!req.file || req.file.length > 1) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
 
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, carousel: image }
+
     try {
-        const roadworks = await Roadworks.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const roadCarousel = await RoadCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!roadworks) {
+        if (!roadCarousel) {
             return res.status(404).send()
         }
-
-        res.send(roadworks)
+        await roadCarousel.save()
+        res.send(roadCarousel)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-// Delete service
-router.delete('/roadworks/:id', authAdmin, async (req, res) => {
-    try {
-        const roadworks = await Roadworks.findByIdAndDelete(req.params.id)
 
-        if (!roadworks) {
+// Update Slider
+router.patch('/road/slider/:id', authAdmin, upload.single('image'), async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['title', 'description']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    console.log(isValidOperation);
+
+    if (!isValidOperation || !req.file) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, image }
+    
+    try {
+        const roadSlider = await RoadSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!roadSlider) {
             return res.status(404).send()
         }
-        res.send(roadworks)
+        await roadSlider.save()
+        res.send(roadSlider)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+// Delete Carousel
+router.delete('/road/carousel/:id', authAdmin, async (req, res) => {
+    try {
+        const roadCarousel = await RoadCarousel.findByIdAndDelete(req.params.id)
+
+        if (!roadCarousel) {
+            return res.status(404).send()
+        }
+        roadCarousel.remove()
+        res.send(roadCarousel)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.delete('/road/slider/:id', authAdmin, async (req, res) => {
+    try {
+        const roadSlider = await RoadSlider.findByIdAndDelete(req.params.id)
+
+        if (!roadSlider) {
+            return res.status(404).send()
+        }
+        roadSlider.remove()
+        res.send(roadSlider)
     } catch (e) {
         res.status(500).send()
     }

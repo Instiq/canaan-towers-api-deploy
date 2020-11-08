@@ -53,11 +53,13 @@ const adminSchema = new mongoose.Schema({
             required: true
         }
     }],
-    carousel: [],
-    slider:[],
     role: {
        type: String,
        required: true 
+    },
+    active: {
+        type: Boolean,
+        required: true
     }
 
 });
@@ -108,8 +110,6 @@ adminSchema.statics.findByCredentials = async (email, password) => {
 // Hash the plain text password before saving
 adminSchema.pre('save', async function (next) {
     const admin = this
-    
-    console.log('only checking')
     if (admin.isModified('password')) {
         admin.password = await bcrypt.hash(admin.password, 8)
     }

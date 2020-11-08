@@ -10,4 +10,6 @@ const Automobile = mongoose.model('Automobile', {
     slider: []
 })
 
+
+
 module.exports = Automobile;

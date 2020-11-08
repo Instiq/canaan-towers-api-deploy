@@ -1,6 +1,6 @@
 const express = require('express')
 const Quotes = require('../models/quotes')
-const Admin = require('../models/admin')
+const Admin = require('../models/admin') 
 const auth = require('../middleware/auth')
 const authAdmin = require('../middleware/authAdmin')
 const router = new express.Router()   
