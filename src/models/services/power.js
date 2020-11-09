@@ -1,13 +1,49 @@
 const mongoose = require('mongoose');
 
-const Power = mongoose.model('Power', { 
-    description: {
+const PowerCarousel = mongoose.model('PowerCarousel', { 
+    carousel: {
+        type: String
+    }
+}) 
+
+const PowerSlider = mongoose.model('PowerSlider', { 
+    image: { 
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
-    carousel: [],
-    slider: []
+    title: { 
+        type: String,
+        required: true
+    },
+    description: { 
+        type: String,
+        required: true
+    }
 })
 
-module.exports = Power;
+const PowerCatalogue = mongoose.model('PowerCatalogue', { 
+    image: { 
+        type: String,
+        required: true
+    },
+    item: { 
+        type: String,
+        required: true
+    },
+    price: { 
+        type: String,
+        required: true
+    },
+    description: { 
+        type: String,
+        required: true
+    },
+    specification: { 
+        type: String,
+        required: true
+    }
+})
+
+
+module.exports = { PowerSlider, PowerCarousel, PowerCatalogue };
+

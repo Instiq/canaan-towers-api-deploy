@@ -35,7 +35,7 @@ router.post('/furnish/catalogue', authAdmin, upload.single('image'), async (req,
         process.exit(1)
     }
 
-    req.body.price = `N${req.body.price}`
+    req.body.price = `₦${req.body.price}`
     const furnishcatalogue = new FurnishCatalogue({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
@@ -163,26 +163,27 @@ router.patch('/furnish/slider/:id', authAdmin, upload.single('image'), async (re
 // Update Catalogue
 router.patch('/furnish/catalogue/:id', authAdmin, upload.single('image'), async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['price', 'description', 'name', '']
+    const allowedUpdates = ['price', 'description', 'item', 'specification']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-
+    console.log('g', isValidOperation, req.body)
     if (!isValidOperation || !req.file) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
 
 
-    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
+    req.body.price = `₦${req.body.price}`
 
     req.body = { ...req.body, image }
     
     try {
-        const furnishSlider = await FurnishSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const furnishCatalogue = await FurnishCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishSlider) {
+        if (!furnishCatalogue) {
             return res.status(404).send()
         }
-        await furnishSlider.save()
-        res.send(furnishSlider)
+        await furnishCatalogue.save()
+        res.send(furnishCatalogue)
     } catch (e) {
         res.status(400).send(e)
     }
@@ -212,6 +213,19 @@ router.delete('/furnish/slider/:id', authAdmin, async (req, res) => {
         }
         furnishSlider.remove()
         res.send(furnishSlider)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+router.delete('/furnish/catalogue/:id', authAdmin, async (req, res) => {
+    try {
+        const furnishCatalogue = await FurnishCatalogue.findByIdAndDelete(req.params.id)
+
+        if (!furnishCatalogue) {
+            return res.status(404).send()
+        }
+        furnishCatalogue.remove()
+        res.send(furnishCatalogue)
     } catch (e) {
         res.status(500).send()
     }

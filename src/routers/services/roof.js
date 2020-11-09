@@ -1,35 +1,25 @@
 const express = require('express')
-const Roof = require('../../models/services/roof')
+const { RoofSlider, RoofCarousel, RoofCatalogue }  = require('../../models/services/roof')
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const router = new express.Router() 
 
 
-// Create Service Endpoint
-router.post('/roof', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    if(req.files){
-            if(req.files.carousel) {
-                let carousels = [];
-                req.files.carousel.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    carousels.push(url);
-                }); 
-
-                carousel = carousels;
-            }
-            if(req.files.slider) {
-                let sliders = [];
-                req.files.slider.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    sliders.push(url);
-                }); 
-                slider = sliders;
-            }
+// Add Carousel
+router.post('/roof/carousel', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('You need to upload an image')
+        process.exit(1)
     }
-    const roof = new Roof({...req.body, carousel, slider })
+
+    const roofCarousel = new RoofCarousel({
+        carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+    })
+
+
     try {
-        await roof.save()
-        res.status(201).send(roof)
+        await roofCarousel.save()
+        res.status(201).send(roofCarousel)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -37,52 +27,205 @@ router.post('/roof', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }
     res.status(400).send({ error: error.message })
 })
 
-// View Service
-router.get('/roof', async (req, res) => {
+
+// Add Catalogue
+router.post('/roof/catalogue', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('Upload An image')
+        process.exit(1)
+    }
+
+    req.body.price = `₦${req.body.price}`
+    const roofcatalogue = new RoofCatalogue({
+        ...req.body,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+        title: req.body.title,
+        description: req.body.description
+    }) 
+
+
     try {
-        const roof = await Roof.find({})
-        res.send(roof)
+        await roofcatalogue.save()
+        res.status(201).send(roofcatalogue)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+// Add Project
+router.post('/roof/slider', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('Upload threee images')
+        process.exit(1)
+    }
+    const roofslider = new RoofSlider({
+        ...req.body,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`
+    })
+
+    try {
+        await roofslider.save()
+        res.status(201).send(roofslider)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+
+// View projects
+router.get('/roof/slider', async (req, res) => {
+    try {
+        const roofSlider = await RoofSlider.find({})
+
+        res.send(roofSlider)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
 
-// Update service 
-// NB: You need to update this so that the admin doesnt need to put the id, 
-// idea you can actually find all the Roof service since it is one then you update it with found
-router.patch('/roof/:id', authAdmin, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['description', 'carousel', 'slider']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log(isValidOperation);
+// view catalogue
+router.get('/roof/catalogue', async (req, res) => {
+    try {
+        const roofcatalogue = await RoofCatalogue.find({})
 
-    if (!isValidOperation) {
+        res.send(roofcatalogue)
+    } catch (e) {
+        res.status(500).send('Error occured')
+    }
+})
+
+// view carousels
+router.get('/roof/carousel', async (req, res) => {
+    try {
+        const roofCarousel = await RoofCarousel.find({})
+
+        res.send(roofCarousel)
+    } catch (e) {
+        res.status(500).send('Error occured')
+    }
+})
+
+
+// Updates Carousel
+router.patch('/roof/carousel/:id', authAdmin, upload.single('image'), async (req, res) => {
+    if (!req.file || req.file.length > 1) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
 
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, carousel: image }
+
     try {
-        const roof = await Roof.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const roofCarousel = await RoofCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!roof) {
+        if (!roofCarousel) {
             return res.status(404).send()
         }
-
-        res.send(roof)
+        await roofCarousel.save()
+        res.send(roofCarousel)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-// Delete service
-router.delete('/roof/:id', authAdmin, async (req, res) => {
-    try {
-        const roof = await Roof.findByIdAndDelete(req.params.id)
 
-        if (!roof) {
+// Update Slider
+router.patch('/roof/slider/:id', authAdmin, upload.single('image'), async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['title', 'description']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidOperation || !req.file) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, image }
+    
+    try {
+        const roofSlider = await RoofSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!roofSlider) {
             return res.status(404).send()
         }
-        res.send(roof)
+        await roofSlider.save()
+        res.send(roofSlider)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+// Update Catalogue
+router.patch('/roof/catalogue/:id', authAdmin, upload.single('image'), async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['price', 'description', 'item', 'specification']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    console.log('g', isValidOperation, req.body)
+    if (!isValidOperation || !req.file) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
+    req.body.price = `₦${req.body.price}`
+
+    req.body = { ...req.body, image }
+    
+    try {
+        const roofCatalogue = await RoofCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!roofCatalogue) {
+            return res.status(404).send()
+        }
+        await roofCatalogue.save()
+        res.send(roofCatalogue)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+// Delete Carousel
+router.delete('/roof/carousel/:id', authAdmin, async (req, res) => {
+    try {
+        const roofCarousel = await RoofCarousel.findByIdAndDelete(req.params.id)
+
+        if (!roofCarousel) {
+            return res.status(404).send()
+        }
+        roofCarousel.remove()
+        res.send(roofCarousel)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.delete('/roof/slider/:id', authAdmin, async (req, res) => {
+    try {
+        const roofSlider = await RoofSlider.findByIdAndDelete(req.params.id)
+
+        if (!roofSlider) {
+            return res.status(404).send()
+        }
+        roofSlider.remove()
+        res.send(roofSlider)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+router.delete('/roof/catalogue/:id', authAdmin, async (req, res) => {
+    try {
+        const roofCatalogue = await RoofCatalogue.findByIdAndDelete(req.params.id)
+
+        if (!roofCatalogue) {
+            return res.status(404).send()
+        }
+        roofCatalogue.remove()
+        res.send(roofCatalogue)
     } catch (e) {
         res.status(500).send()
     }

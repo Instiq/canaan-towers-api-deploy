@@ -1,35 +1,25 @@
 const express = require('express')
-const Automobile = require('../../models/services/automobile')
+const { AutomobileSlider, AutomobileCarousel, AutomobileCatalogue }  = require('../../models/services/automobile')
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const router = new express.Router() 
 
 
-// Create Service Endpoint
-router.post('/automobile', authAdmin, upload.fields([{ name: 'carousel', maxCount: 3 }, { name: 'slider', maxCount: 3 }]), async (req, res) => {
-    if(req.files){
-            if(req.files.carousel) {
-                let carousels = [];
-                req.files.carousel.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    carousels.push(url);
-                }); 
-
-                carousel = carousels;
-            }
-            if(req.files.slider) {
-                let sliders = [];
-                req.files.slider.forEach(photo => {
-                    let url = `${process.env.DEPLOYED_URL}/${photo.filename}`
-                    sliders.push(url);
-                }); 
-                slider = sliders;
-            }
+// Add Carousel
+router.post('/automobile/carousel', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('You need to upload an image')
+        process.exit(1)
     }
-    const automobile = new Automobile({...req.body, carousel, slider })
+
+    const automobileCarousel = new AutomobileCarousel({
+        carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+    })
+
+
     try {
-        await automobile.save()
-        res.status(201).send(automobile)
+        await automobileCarousel.save()
+        res.status(201).send(automobileCarousel)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -37,52 +27,206 @@ router.post('/automobile', authAdmin, upload.fields([{ name: 'carousel', maxCoun
     res.status(400).send({ error: error.message })
 })
 
-// View Service
-router.get('/automobile', authAdmin, async (req, res) => {
+
+// Add Catalogue
+router.post('/automobile/catalogue', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('Upload An image')
+        process.exit(1)
+    }
+
+    req.body.price = `₦${req.body.price}`
+    const automobilecatalogue = new AutomobileCatalogue({
+        ...req.body,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+        title: req.body.title,
+        description: req.body.description
+    }) 
+
+
     try {
-        const automobile = await Automobile.find({})
-        res.send(automobile)
+        await automobilecatalogue.save()
+        res.status(201).send(automobilecatalogue)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+
+// Add Project
+router.post('/automobile/slider', authAdmin, upload.single('image'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).send('Upload threee images')
+        process.exit(1)
+    }
+    const automobileslider = new AutomobileSlider({
+        ...req.body,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`
+    })
+
+    try {
+        await automobileslider.save()
+        res.status(201).send(automobileslider)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
+
+// View projects
+router.get('/automobile/slider', async (req, res) => {
+    try {
+        const automobileSlider = await AutomobileSlider.find({})
+
+        res.send(automobileSlider)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
 
-// Update service 
-// NB: You need to update this so that the admin doesnt need to put the id, 
-// idea you can actually find all the automobile service since it is one then you update it with found
-router.patch('/automobile/:id', authAdmin, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['description', 'carousel', 'slider']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log(isValidOperation);
+// view catalogue
+router.get('/automobile/catalogue', async (req, res) => {
+    try {
+        const automobilecatalogue = await AutomobileCatalogue.find({})
 
-    if (!isValidOperation) {
+        res.send(automobilecatalogue)
+    } catch (e) {
+        res.status(500).send('Error occured')
+    }
+})
+
+// view carousels
+router.get('/automobile/carousel', async (req, res) => {
+    try {
+        const automobileCarousel = await AutomobileCarousel.find({})
+
+        res.send(automobileCarousel)
+    } catch (e) {
+        res.status(500).send('Error occured')
+    }
+})
+
+
+// Updates Carousel
+router.patch('/automobile/carousel/:id', authAdmin, upload.single('image'), async (req, res) => {
+    if (!req.file || req.file.length > 1) {
         return res.status(400).send({ error: 'Invalid updates!' })
     }
 
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, carousel: image }
+
     try {
-        const automobile = await Automobile.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const automobileCarousel = await AutomobileCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!automobile) {
+        if (!automobileCarousel) {
             return res.status(404).send()
         }
-
-        res.send(automobile)
+        await automobileCarousel.save()
+        res.send(automobileCarousel)
     } catch (e) {
         res.status(400).send(e)
     }
 })
 
-// Delete service
-router.delete('/automobile/:id', authAdmin, async (req, res) => {
-    try {
-        const automobile = await Automobile.findByIdAndDelete(req.params.id)
 
-        if (!automobile) {
+// Update Slider
+router.patch('/automobile/slider/:id', authAdmin, upload.single('image'), async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['title', 'description']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+    if (!isValidOperation || !req.file) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
+
+    req.body = { ...req.body, image }
+    
+    try {
+        const automobileSlider = await AutomobileSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!automobileSlider) {
             return res.status(404).send()
         }
-        res.send(automobile)
+        await automobileSlider.save()
+        res.send(automobileSlider)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+// Update Catalogue
+router.patch('/automobile/catalogue/:id', authAdmin, upload.single('image'), async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['price', 'description', 'item', 'specification']
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+    console.log('g', isValidOperation, req.body)
+    if (!isValidOperation || !req.file) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+
+
+    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
+    req.body.price = `₦${req.body.price}`
+
+    req.body = { ...req.body, image }
+    
+    try {
+        const automobileCatalogue = await AutomobileCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!automobileCatalogue) {
+            return res.status(404).send()
+        }
+        await automobileCatalogue.save()
+        res.send(automobileCatalogue)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+})
+
+// Delete Carousel
+router.delete('/automobile/carousel/:id', authAdmin, async (req, res) => {
+    try {
+        const automobileCarousel = await AutomobileCarousel.findByIdAndDelete(req.params.id)
+
+        if (!automobileCarousel) {
+            return res.status(404).send()
+        }
+        automobileCarousel.remove()
+        res.send(automobileCarousel)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.delete('/automobile/slider/:id', authAdmin, async (req, res) => {
+    try {
+        const automobileSlider = await AutomobileSlider.findByIdAndDelete(req.params.id)
+
+        if (!automobileSlider) {
+            return res.status(404).send()
+        }
+        automobileSlider.remove()
+        res.send(automobileSlider)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+router.delete('/automobile/catalogue/:id', authAdmin, async (req, res) => {
+    try {
+        const automobileCatalogue = await AutomobileCatalogue.findByIdAndDelete(req.params.id)
+
+        if (!automobileCatalogue) {
+            return res.status(404).send()
+        }
+        automobileCatalogue.remove()
+        res.send(automobileCatalogue)
     } catch (e) {
         res.status(500).send()
     }

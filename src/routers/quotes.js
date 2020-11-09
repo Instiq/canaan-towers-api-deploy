@@ -1,35 +1,21 @@
 const express = require('express')
 const Quotes = require('../models/quotes')
-const Admin = require('../models/admin') 
-const auth = require('../middleware/auth')
 const authAdmin = require('../middleware/authAdmin')
+const { ObjectID } = require('mongodb')
 const router = new express.Router()   
 
-
-// const main = async () => {
-//     const quotes = await Quotes.findById('5fa01424aab6f33948b68866')
-//     await quotes.populate('owner').execPopulate()
-//     delete quotes.owner.firstname;
-//     // console.log(quotes.owner)
-//     quoteUser = {...quotes}
-//     delete quoteUser._doc._id
-// }
-
-// main()
 
 
 
 // Quotes Endpoint
-router.post('/quotes', auth, async (req, res) => {
-    // delete (req.user.tokens)
-    console.log(req.user)
-    let user = {...req.user}
-    delete user._doc.tokens
-    delete user._doc.password
+router.post('/quotes', async (req, res) => {
+    if(req.body.items) {
+        req.body.items = {...req.body.items, _id: new ObjectID}
+    }
+
     const quotes = new Quotes({
-        ...req.body,
-        person: user._doc
-    })
+        ...req.body
+    }) 
 
     try {
         await quotes.save()
@@ -38,38 +24,26 @@ router.post('/quotes', auth, async (req, res) => {
         res.status(400).send(e)
     }
 }) 
+ 
 
-router.get('/admins', authAdmin, async (req, res) => {
+// Admin view quote
+router.get('/quote/admin', authAdmin, async (req, res) => {
     try {
-        const quotes = await Quotes.find({})
-        // const permission = await Admin.findOne({ 'role': '1' })
-        // console.log('hello', req.headers)
-        // if(!permission) {
-        //     res.status(400).send()
-        // }
         console.log('123')
+        const quotes = await Quotes.find({})
         res.send(quotes)
     } catch (e) {
         res.status(500).send('Error occured')
     }
 })
 
-// View all your quotes
-router.get('/quotes/yours', auth, async (req, res) => {
-    try {
-        await req.user.populate('quotes').execPopulate()
-        res.send(req.user.quotes)
-    } catch (e) {
-        res.status(500).send('Error occured')
-    }
-})
 
 // View a single quote
-router.get('/quotes/:id', auth, async (req, res) => { 
+router.get('/quotes/:id', async (req, res) => { 
     const _id = req.params.id
 
     try {
-        const quotes = await Quotes.findOne({ _id, owner: req.user._id })
+        const quotes = await Quotes.findOne({ _id })
 
         if (!quotes) {
             return res.status(404).send()
@@ -81,34 +55,10 @@ router.get('/quotes/:id', auth, async (req, res) => {
     }
 })
 
-router.patch('/quotes/:id', auth, async (req, res) => {
-    const updates = Object.keys(req.body)
-    const allowedUpdates = ['email', 'number', 'message']
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' })
-    }
-
+// Admin delete quote
+router.delete('/quotes/:id', async (req, res) => {
     try {
-        const quotes = await Quotes.findOne({ _id: req.params.id, owner: req.user._id})
-
-        if (!quotes) {
-            return res.status(404).send()
-        }
-
-        updates.forEach((update) => quotes[update] = req.body[update])
-        await quotes.save()
-
-        res.send(quotes)
-    } catch (e) {
-        res.status(400).send(e)
-    }
-})
-
-router.delete('/quotes/:id', auth, async (req, res) => {
-    try {
-        const quotes = await Quotes.findByIdAndDelete({ _id: req.params.id, owner: req.user._id })
+        const quotes = await Quotes.findByIdAndDelete({ _id: req.params.id })
 
         if (!quotes) {
             return res.status(404).send()

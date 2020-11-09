@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+
 const Quotes = mongoose.model('Quotes', {
+    name: {
+        type: String,
+        required: true, 
+        trim: true
+    },
     email: {
         type: String,
         required: true,
@@ -32,13 +38,9 @@ const Quotes = mongoose.model('Quotes', {
             }
         }
     },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    person: {
+    items: {
         type: []
-    }
+    }   
 })
 
 module.exports = Quotes;

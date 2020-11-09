@@ -1,13 +1,49 @@
 const mongoose = require('mongoose');
 
-const Roof = mongoose.model('Roof', { 
-    description: {
+const RoofCarousel = mongoose.model('RoofCarousel', { 
+    carousel: {
+        type: String
+    }
+}) 
+
+const RoofSlider = mongoose.model('RoofSlider', { 
+    image: { 
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
-    carousel: [],
-    slider: []
+    title: { 
+        type: String,
+        required: true
+    },
+    description: { 
+        type: String,
+        required: true
+    }
 })
 
-module.exports = Roof;
+const RoofCatalogue = mongoose.model('RoofCatalogue', { 
+    image: { 
+        type: String,
+        required: true
+    },
+    item: { 
+        type: String,
+        required: true
+    },
+    price: { 
+        type: String,
+        required: true
+    },
+    description: { 
+        type: String,
+        required: true
+    },
+    specification: { 
+        type: String,
+        required: true
+    }
+})
+
+
+module.exports = { RoofSlider, RoofCarousel, RoofCatalogue };
+
