@@ -7,7 +7,7 @@ const router = new express.Router()
 
 // Users Endpoint 
 router.post('/users', async (req, res) => {
-    const user = new User(req.body)
+    const user = new User(req.body) 
 
     try {
         await user.save()

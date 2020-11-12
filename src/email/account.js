@@ -23,4 +23,26 @@ const sendCancelationEmail = (email, firstname) => {
     })
 }
 
-module.exports = { sendWelcomeEmail, sendCancelationEmail }
+const notifyCustomerQuoteSent = (email, name) => {
+    sgMail.send({
+        to: email,
+        from: 'adududuke@gmail.com',
+        subject: 'Canaan Towers - Quotes sent in! 🎉',
+        text: `Welcome to Canaan Towers, ${name}. Thanks for patronizing Canaan Towers. Your quote has been sent in. We will get back to you shortly.
+        
+        
+        Cheers,
+        Blessed Adudu.`
+    })
+}
+
+const notifyAdminQuoteSent = (name) => {
+    sgMail.send({
+        to: 'adududuke@yahoo.com',
+        from: 'adududuke@gmail.com',
+        subject: 'Canaan Towers - New Quote sent in! 🎉',
+        text: `Hello, Admin. Your attention is needed. A new quote has been sent in by ${name}. Please check your dashboard https://www.google.com/ for further details.`
+    })
+}
+
+module.exports = { sendWelcomeEmail, sendCancelationEmail, notifyCustomerQuoteSent, notifyAdminQuoteSent }

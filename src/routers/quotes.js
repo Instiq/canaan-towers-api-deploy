@@ -3,8 +3,7 @@ const Quotes = require('../models/quotes')
 const authAdmin = require('../middleware/authAdmin')
 const { ObjectID } = require('mongodb')
 const router = new express.Router()   
-
-
+const { notifyCustomerQuoteSent, notifyAdminQuoteSent } = require('../email/account')
 
 
 // Quotes Endpoint
@@ -12,6 +11,11 @@ router.post('/quotes', async (req, res) => {
     if(req.body.items) {
         req.body.items = {...req.body.items, _id: new ObjectID}
     }
+
+    console.log(req.body)
+
+    notifyCustomerQuoteSent(req.body.email, req.body.name)
+    notifyAdminQuoteSent(req.body.name)
 
     const quotes = new Quotes({
         ...req.body
