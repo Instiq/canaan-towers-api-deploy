@@ -31,8 +31,8 @@ const notifyCustomerQuoteSent = (email, name) => {
         text: `Welcome to Canaan Towers, ${name}. Thanks for patronizing Canaan Towers. Your quote has been sent in. We will get back to you shortly.
         
         
-        Cheers,
-        Blessed Adudu.`
+Cheers,
+Blessed Adudu.`
     })
 }
 
