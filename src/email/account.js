@@ -41,7 +41,7 @@ const notifyAdminQuoteSent = (name) => {
         to: 'adududuke@yahoo.com',
         from: 'adududuke@gmail.com',
         subject: 'Canaan Towers - New Quote sent in! 🎉',
-        text: `Hello, Admin. Your attention is needed. A new quote has been sent in by ${name}. Please check your dashboard https://www.google.com/ for further details.`
+        text: `Hello, Admin. Your attention is needed. A new quote has been sent in by ${name}. Please check your dashboard for further details.`
     })
 }
 
