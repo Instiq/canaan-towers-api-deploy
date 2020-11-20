@@ -3,7 +3,7 @@ const Admin = require('../models/admin')
 
 
 const authAdmin = async (req, res, next) => {
-    try {
+    try { 
         const token = req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN)
         const admin = await Admin.findOne({ _id: decoded._id, 'tokens.token': token })
