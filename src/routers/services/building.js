@@ -28,13 +28,13 @@ router.post('/building/carousel', authAdmin, upload.single('image'), async (req,
     res.status(400).send({ error: error.message })
 })
 
-// Add Project
-router.post('/building/slider', authAdmin, upload.single('image'), async (req, res) => {
+// Add Project  you removed auth and made image unrequired
+router.post('/building/slider', upload.single('image'), async (req, res) => {
     console.log(req.file)
-    if(!req.file) {
-        res.status(400).send('Upload threee images')
-        process.exit(1)
-    }
+    // if(!req.file) {
+    //     res.status(400).send('Upload threee images')
+    //     process.exit(1)
+    // // }
     const buildingslider = new BuildSlider({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
