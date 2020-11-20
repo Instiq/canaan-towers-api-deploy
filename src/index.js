@@ -21,7 +21,7 @@ const port = process.env.PORT;
 
 
 app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
-// app.options('*', cors());
+app.options('*', cors());
 
 
 app.use(express.json({ extended: false }))
