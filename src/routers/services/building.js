@@ -37,7 +37,7 @@ router.post('/building/slider', authAdmin, upload.single('image'), async (req, r
     }
     const buildingslider = new BuildSlider({
         ...req.body,
-        images: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
         title: req.body.title,
         description: req.body.description
     })

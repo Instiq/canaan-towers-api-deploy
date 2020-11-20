@@ -21,6 +21,9 @@ const port = process.env.PORT;
 
 
 app.use(cors())
+app.options('*', cors());
+
+
 app.use(express.json({ extended: false }))
 app.use(express.static('uploads'))
 app.use(userRouter)
