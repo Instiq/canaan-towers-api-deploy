@@ -129,7 +129,7 @@ router.patch('/building/slider/:id', authAdmin, upload.single('image'), async (r
 })
 
 // Delete Carousel
-router.delete('/building/carousel/:id', authAdmin, async (req, res) => {
+router.delete('/building/carousel/:id', async (req, res) => {
     try {
         const buildingCarousel = await BuildingCarousel.findByIdAndDelete(req.params.id)
 
