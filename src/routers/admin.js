@@ -6,7 +6,7 @@ const router = new express.Router()
 
 // admin Endpoint
 router.post('/admin', async (req, res) => {
-    const admin = new Admin({ ...req.body, role: '1'})
+    const admin = new Admin({ ...req.body, role: '1', active: true })
     try {
         await admin.save()
         const token = await admin.generateAuthToken()
