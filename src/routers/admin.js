@@ -19,6 +19,17 @@ router.post('/admin', async (req, res) => {
 
 // Create subadmin
 router.post('/admin/create', authAdmin, async (req, res) => {
+    // convert request name to Sentence case
+    var toTitleCase = function (str) {
+        str = str.toLowerCase().split(' ');
+        for (var i = 0; i < str.length; i++) {
+            str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+        }
+        return str.join(' ');
+    };
+    
+    var name = toTitleCase(req.body.name)
+    req.body.name = name
     const admin = new Admin({ ...req.body, role: '2', active: true})
     try {
         await admin.save()
@@ -55,7 +66,6 @@ router.patch('/admin/revoke/:id', authAdmin, async (req, res) => {
 // Make Admin Active
 router.patch('/admin/active/:id', authAdmin, async (req, res) => { 
     try {
-        console.log(req.params.id)
         const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
         if(!permission) {
             res.status(401).send()
@@ -81,25 +91,28 @@ router.post('/admin/login', async (req, res) => {
     try {
         const admin = await Admin.findByCredentials(req.body.email, req.body.password)
         const token = await admin.generateAuthToken()
-        res.send({ admin, token })
+        res.status(200).json({
+            status: 'success',
+            message: 'Ok',
+            data: { admin, token }
+        })
     } catch (e) {
         res.status(400).send()
     }
 })
 
-// View all subadmins
+// Admin view quote ensure you add the auth later
+// View all subadmins 
 router.get('/admins', authAdmin, async (req, res) => { 
     try {
-        console.log(req.id)
         const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
         if(!permission) {
             res.status(400).send()
         }
-
         const admin = await Admin.find({ 'role': '2'})
         res.send(admin)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).send('Server issues')
     }
 })
 

@@ -19,7 +19,7 @@ const BuildSlider = mongoose.model('BuildSlider', {
         type: String,
         required: true
     }
-})
+}) 
 
 
 module.exports = { BuildingCarousel, BuildSlider };

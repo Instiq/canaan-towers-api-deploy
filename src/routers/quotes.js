@@ -11,9 +11,6 @@ router.post('/quotes', async (req, res) => {
     if(req.body.items) {
         req.body.items = {...req.body.items, _id: new ObjectID}
     }
-
-    console.log(req.body)
-
     notifyCustomerQuoteSent(req.body.email, req.body.name)
     notifyAdminQuoteSent(req.body.name)
 
@@ -30,8 +27,8 @@ router.post('/quotes', async (req, res) => {
 }) 
  
 
-// Admin view quote
-router.get('/quote/admin', authAdmin, async (req, res) => {
+// Admin view quote ensure you add the auth later
+router.get('/quote/admin', async (req, res) => {
     try {
         console.log('123')
         const quotes = await Quotes.find({})

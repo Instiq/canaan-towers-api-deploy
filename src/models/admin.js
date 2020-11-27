@@ -5,12 +5,7 @@ const jwt = require('jsonwebtoken')
 
 
 const adminSchema = new mongoose.Schema({
-    firstname: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    lastname: { 
+    name: {
         type: String,
         required: true,
         trim: true
@@ -68,7 +63,7 @@ adminSchema.virtual('quotes', {
     ref: 'Quotes',
     localField: '_id',
     foreignField: 'owner'
-})
+}) 
 
 
 adminSchema.methods.toJSON = function () {

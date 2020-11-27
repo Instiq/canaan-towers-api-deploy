@@ -7,7 +7,7 @@ const authAdmin = async (req, res, next) => {
         const token = req.header('Authorization').replace('Bearer ', '')
         const decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN)
         const admin = await Admin.findOne({ _id: decoded._id, 'tokens.token': token })
-
+ 
         if (!admin) {
             throw new Error()
         }

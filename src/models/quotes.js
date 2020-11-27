@@ -8,7 +8,7 @@ const Quotes = mongoose.model('Quotes', {
         required: true, 
         trim: true
     },
-    email: {
+    email: { 
         type: String,
         required: true,
         trim: true,
@@ -20,7 +20,7 @@ const Quotes = mongoose.model('Quotes', {
         }
     },
     number: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
         validate(value) {
@@ -43,4 +43,4 @@ const Quotes = mongoose.model('Quotes', {
     }   
 })
 
-module.exports = Quotes;
+module.exports = Quotes; 

@@ -31,7 +31,7 @@ router.post('/furnish/carousel', authAdmin, upload.single('image'), async (req, 
 // Add Catalogue
 router.post('/furnish/catalogue', authAdmin, upload.single('image'), async (req, res) => {
     if(!req.file) {
-        res.status(400).send('Upload threee images')
+        res.status(400).send('Upload an image')
         process.exit(1)
     }
 
