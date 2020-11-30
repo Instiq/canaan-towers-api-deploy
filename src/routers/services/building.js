@@ -32,7 +32,7 @@ router.post('/building/carousel', authAdmin, upload.single('image'), async (req,
 router.post('/building/slider', upload.single('image'), async (req, res) => {
     console.log(req.file)
     if(!req.file) {
-        res.status(400).send('Upload an images')
+        res.status(400).send('Upload an image')
         process.exit(1)
     }
     const buildingslider = new BuildSlider({

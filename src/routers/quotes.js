@@ -1,29 +1,47 @@
 const express = require('express')
 const Quotes = require('../models/quotes')
 const authAdmin = require('../middleware/authAdmin')
+const upload = require('../middleware/multer')
 const { ObjectID } = require('mongodb')
 const router = new express.Router()   
 const { notifyCustomerQuoteSent, notifyAdminQuoteSent } = require('../email/account')
 
 
 // Quotes Endpoint
-router.post('/quotes', async (req, res) => {
+router.post('/quotes', upload.single('image'), async (req, res) => {
     if(req.body.items) {
         req.body.items = {...req.body.items, _id: new ObjectID}
     }
+
     notifyCustomerQuoteSent(req.body.email, req.body.name)
     notifyAdminQuoteSent(req.body.name)
 
-    const quotes = new Quotes({
-        ...req.body
-    }) 
+    
 
-    try {
-        await quotes.save()
-        res.status(201).send(quotes)
-    } catch (e) {
-        res.status(400).send(e)
+    if(req.file) {
+        const quotes = new Quotes({
+            ...req.body,
+            image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+        })
+        try {
+            await quotes.save()
+            res.status(201).send(quotes)
+        } catch (e) {
+            res.status(400).send(e)
+        } 
+    } else {
+        const quotes = new Quotes({
+            ...req.body
+        }) 
+        try {
+            await quotes.save()
+            res.status(201).send(quotes)
+        } catch (e) {
+            res.status(400).send(e)
+        }
     }
+
+   
 }) 
  
 

@@ -38,6 +38,9 @@ const Quotes = mongoose.model('Quotes', {
             }
         }
     },
+    image: { 
+        type: String
+    },
     items: {
         type: []
     }   
