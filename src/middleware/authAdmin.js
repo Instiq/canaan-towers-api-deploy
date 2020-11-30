@@ -3,13 +3,11 @@ const Admin = require('../models/admin')
 
 
 const authAdmin = async (req, res, next) => {
-    console.log('before', req.header)
+    console.log('before', req)
     try { 
         const token = req.header('Authorization').replace('Bearer ', '')
-        console.log('after',token)
         const decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN)
-        console.log(decoded._id)
-        console.log(token)
+        console.log('oom', token)
         const admin = await Admin.findOne({ _id: decoded._id, 'tokens.token': token })
  
         if (!admin) {

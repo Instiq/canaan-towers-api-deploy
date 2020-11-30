@@ -29,7 +29,7 @@ app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
 
 
 app.use(express.json({ extended: false }))
-app.use(express.static('public'))
+app.use(express.static('public/uploads'))
 app.use(userRouter)
 app.use(adminRouter)
 app.use(quotesRouter)
