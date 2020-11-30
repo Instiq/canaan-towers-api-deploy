@@ -56,7 +56,7 @@ router.post('/power/catalogue', authAdmin, upload.single('image'), async (req, r
 // Add Project
 router.post('/power/slider', authAdmin, upload.single('image'), async (req, res) => {
     if(!req.file) {
-        res.status(400).send('Upload threee images')
+        res.status(400).send('Upload an image')
         process.exit(1)
     }
     const powerslider = new PowerSlider({

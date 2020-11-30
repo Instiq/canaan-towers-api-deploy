@@ -10,7 +10,7 @@ const BuildingCarousel = mongoose.model('BuildingCarousel', {
 const BuildSlider = mongoose.model('BuildSlider', { 
     image: { 
         type: String
-    },
+    }, 
     title: { 
         type: String,
         required: true

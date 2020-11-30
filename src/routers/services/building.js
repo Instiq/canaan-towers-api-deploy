@@ -31,10 +31,10 @@ router.post('/building/carousel', authAdmin, upload.single('image'), async (req,
 // Add Project  you removed auth and made image unrequired
 router.post('/building/slider', upload.single('image'), async (req, res) => {
     console.log(req.file)
-    // if(!req.file) {
-    //     res.status(400).send('Upload threee images')
-    //     process.exit(1)
-    // // }
+    if(!req.file) {
+        res.status(400).send('Upload an images')
+        process.exit(1)
+    }
     const buildingslider = new BuildSlider({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,

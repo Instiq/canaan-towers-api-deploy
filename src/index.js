@@ -1,6 +1,7 @@
 const express = require('express'); 
 const connectDB = require('./db/mongoose');
 const cors = require('cors')
+const helmet = require("helmet");
 const userRouter = require('./routers/users');
 const adminRouter = require('./routers/admin');
 const quotesRouter = require('./routers/quotes');
@@ -17,22 +18,18 @@ const swaggerDocument = require('./swagger.json');
 connectDB();
 
 const app = express();
+
 const port = process.env.PORT;
 
-app.use((req, res, next) => {
-    req.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next()
-})
-
-app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
+app.use(helmet());
 app.options('*', cors());
+app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
+
+
 
 
 app.use(express.json({ extended: false }))
-app.use(express.static('uploads'))
+app.use(express.static('public'))
 app.use(userRouter)
 app.use(adminRouter)
 app.use(quotesRouter)
