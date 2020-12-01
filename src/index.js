@@ -31,7 +31,10 @@ const port = process.env.PORT;
 
 app.use(helmet());
 app.options('*', cors());
-app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
+app.use(cors( {
+    origin: 'https://canaantowersb.netlify.app',
+    exposedHeaders: [ 'Authorization' ]
+}))
 
 
 
