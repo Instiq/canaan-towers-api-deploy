@@ -1,5 +1,5 @@
 const express = require('express')
-const multer = require('multer')
+const upload = require('../middleware/multer')
 const Admin = require('../models/admin')
 const authAdmin = require('../middleware/authAdmin')
 const router = new express.Router() 
@@ -18,19 +18,19 @@ router.post('/admin', async (req, res) => {
 
 
 // Create subadmin
-router.post('/admin/create', authAdmin, async (req, res) => {
-    // convert request name to Sentence case
-    var toTitleCase = function (str) {
-        str = str.toLowerCase().split(' ');
-        for (var i = 0; i < str.length; i++) {
-            str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-        }
-        return str.join(' ');
-    };
-    
-    var name = toTitleCase(req.body.name)
-    req.body.name = name
-    const admin = new Admin({ ...req.body, role: '2', active: true})
+router.post('/admin/create', authAdmin, upload.single('image'), async (req, res) => {
+    console.log(req.file)
+    if(!req.file) {
+        res.status(400).send('You need to upload an image')
+        process.exit(1)
+    }
+
+
+    const admin = new Admin({ 
+        ...req.body, role: '2',
+        active: true,
+        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+    })
     try {
         await admin.save()
         const token = await admin.generateAuthToken()
@@ -102,7 +102,7 @@ router.post('/admin/login', async (req, res) => {
 })
 
 // Admin view quote ensure you add the auth later
-// View all subadmins 
+// View all subadmins  
 router.get('/admins', authAdmin, async (req, res) => { 
     try {
         const permission = await Admin.findOne({ _id: req.id, 'role': '1' })

@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./db/mongoose');
 const cors = require('cors')
 const helmet = require("helmet");
+var bodyParser = require('body-parser')
 const userRouter = require('./routers/users');
 const adminRouter = require('./routers/admin');
 const quotesRouter = require('./routers/quotes');
@@ -19,10 +20,18 @@ connectDB();
 
 const app = express();
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+ 
+// parse application/json
+app.use(bodyParser.json())
+ 
+
 const port = process.env.PORT;
 
 app.use(helmet());
-app.options('*', cors());
+// app.options('*', cors());
+app.use(cors('*'));
 app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
 
 

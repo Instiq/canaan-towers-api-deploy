@@ -8,13 +8,12 @@ const adminSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true
     },
     email: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
-        unique: true,
+        // unique: true,
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
@@ -24,8 +23,8 @@ const adminSchema = new mongoose.Schema({
     },
     number: {
         type: String,
-        required: true,
-        trim: true,
+        // required: true,
+        trim: true, 
         validate(value) {
             if (value < 11) {
                 throw new Error('Invalid phone number');
@@ -34,13 +33,16 @@ const adminSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
         validate(value) {
             if (value < 7) {
                 throw new Error('Password should not be less than 8 characters')
             }
         }
+    },
+    image: { 
+        type: String
     },
     tokens: [{
         token: {
