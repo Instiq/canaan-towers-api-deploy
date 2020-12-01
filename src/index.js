@@ -31,10 +31,20 @@ const port = process.env.PORT;
 
 app.use(helmet());
 app.options('*', cors());
-app.use(cors( {
-    origin: 'https://canaantowersb.netlify.app',
-    exposedHeaders: [ 'Authorization' ]
-}))
+
+var allowedOrigins = ['http://localhost:8080','http://localhost:8081', 'https://canaantowersb.netlify.app'];
+app.use(cors({
+  origin: function(origin, callback) {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  exposedHeaders: [ 'Authorization' ]
+}));
 
 
 
