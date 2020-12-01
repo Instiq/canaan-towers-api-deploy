@@ -30,8 +30,7 @@ app.use(bodyParser.json())
 const port = process.env.PORT;
 
 app.use(helmet());
-// app.options('*', cors());
-app.use(cors('*'));
+app.options('*', cors());
 app.use(cors( { exposedHeaders: [ 'Authorization' ]}))
 
 

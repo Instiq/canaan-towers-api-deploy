@@ -7,7 +7,7 @@ const router = new express.Router()
 
 // Add Carousel
 router.post('/building/carousel', authAdmin, upload.single('image'), async (req, res) => {
-    console.log(req.file)
+    console.log('image', req.file)
     if(!req.file) {
         res.status(400).send('You need to upload an image')
         process.exit(1)
@@ -30,7 +30,7 @@ router.post('/building/carousel', authAdmin, upload.single('image'), async (req,
 
 // Add Project  you removed auth and made image unrequired
 router.post('/building/slider', upload.single('image'), async (req, res) => {
-    console.log(req.file)
+    console.log('ede', req.file)
     if(!req.file) {
         res.status(400).send('Upload an image')
         process.exit(1)
