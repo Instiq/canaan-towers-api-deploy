@@ -113,7 +113,7 @@ router.patch('/building/slider/:id', authAdmin, upload.single('image'), async (r
 
     let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
 
-    req.body = { ...req.body, images: image }
+    req.body = { ...req.body, image: image }
     
     try {
         const buildSlider = await BuildSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
