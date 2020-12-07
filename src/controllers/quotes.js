@@ -43,7 +43,7 @@ const viewQuotes = async (req, res) => {
 
         res.status(200).json(success({ quotes, count }))
     } catch (error) {
-        res.status(500).json({message: e.message}) 
+        res.status(500).json({message: error.message}) 
     }
 }
 
