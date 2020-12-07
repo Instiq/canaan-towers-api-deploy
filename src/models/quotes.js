@@ -31,7 +31,6 @@ const Quotes = mongoose.model('Quotes', {
     },
     message: {
         type: String,
-        required: true,
         validate(value) {
             if (validator.isEmpty(value)) {
                 throw new Error('You must send a message !!!')
@@ -40,10 +39,7 @@ const Quotes = mongoose.model('Quotes', {
     },
     image: { 
         type: String
-    },
-    items: {
-        type: []
-    }   
+    }  
 })
 
 module.exports = Quotes; 

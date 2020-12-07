@@ -11,9 +11,9 @@ const adminSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        // required: true,
+        required: true,
         trim: true,
-        // unique: true,
+        unique: true,
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
@@ -23,7 +23,7 @@ const adminSchema = new mongoose.Schema({
     },
     number: {
         type: String,
-        // required: true,
+        required: true,
         trim: true, 
         validate(value) {
             if (value < 11) {
@@ -33,7 +33,7 @@ const adminSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        // required: true,
+        required: true,
         trim: true,
         validate(value) {
             if (value < 7) {
