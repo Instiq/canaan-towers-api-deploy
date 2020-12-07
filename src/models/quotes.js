@@ -18,7 +18,7 @@ const Quotes = mongoose.model('Quotes', {
                 throw new Error('Email is invalid')
             } 
         }
-    },
+    }, 
     number: {
         type: String,
         required: true,

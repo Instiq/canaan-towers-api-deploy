@@ -27,10 +27,6 @@ const createAdmin = async (req, res) => {
 
 const createsubAdmin = async (req, res) => {
     console.log(req.file)
-    if(!req.file) {
-        res.status(400).json(error('Bad request', 'You need to upload an image'))
-    }
-
 
     const admin = new Admin({ 
         ...req.body, role: '2',

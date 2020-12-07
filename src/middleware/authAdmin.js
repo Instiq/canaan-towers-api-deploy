@@ -9,7 +9,7 @@ const authAdmin = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_ADMIN)
         const admin = await Admin.findOne({ _id: decoded._id, 'tokens.token': token })
  
-        if (!admin) {
+        if (!admin) { 
             throw new Error()
         }
 

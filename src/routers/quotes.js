@@ -19,4 +19,4 @@ router.get('/quotes/:id', authAdmin, singleQuote)
 // Admin delete quote
 router.delete('/quotes/:id', authAdmin, deleteQuote)
 
-module.exports = router
+module.exports = router  
