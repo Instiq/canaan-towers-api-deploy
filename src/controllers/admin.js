@@ -1,5 +1,5 @@
 const Admin = require('../models/admin')
-const { success, error, errorUnauthorized } = require('../responseFormatter/response')
+const { success, errorUnauthorized, errorout } = require('../responseFormatter/response')
 
 // const adminLogin = async (req, res) => {
 //     try {
@@ -21,12 +21,13 @@ const createAdmin = async (req, res) => {
         const token = await admin.generateAuthToken()
         res.status(201).json(success({ admin, token })) 
     } catch (error) {
-        res.status(400).json(error('Bad request', error.message)) 
+        res.status(400).json(errorout('Bad request', error.message)) 
     }
 }
 
 const createsubAdmin = async (req, res) => {
     console.log(req.file)
+
 
     const admin = new Admin({ 
         ...req.body, role: '2',
@@ -38,7 +39,7 @@ const createsubAdmin = async (req, res) => {
         const token = await admin.generateAuthToken()
         res.status(201).json(success({ admin, token })) 
     } catch (e) {
-        res.status(400).json(error('Bad request', e.message))
+        res.status(400).json(errorout('Bad request', e.message)) 
     }
 }
 
@@ -48,7 +49,7 @@ const adminLogin = async (req, res) => {
         const token = await admin.generateAuthToken()
         res.status(200).json(success({ admin, token }))
     } catch (error) {
-        res.status(400).json(error('Bad request', error.message))
+        res.status(400).json(errorout('Bad request', error.message)) 
     }
 }
 
@@ -65,7 +66,7 @@ const revokeAdmin = async (req, res) => {
         const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
         if (!admin) {
-            return res.status(404).json(error('Bad request', 'User not found'))
+            return res.status(404).json(errorout('Bad request', 'User not found'))
         }
 
         await admin.save()
@@ -87,7 +88,7 @@ const activeAdmin = async (req, res) => {
         const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
         if (!admin) {
-            return res.status(404).json(error('Bad request', 'User not found'))
+            return res.status(404).json(errorout('Bad request', 'User not found'))
         }
 
         await admin.save()
@@ -139,7 +140,7 @@ const updateProfile = async (req, res) => {
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
-        return res.status(400).json(error('Bad request', 'Invalid updates'))
+        return res.status(400).json(errorout('Bad request', 'Invalid updates'))
     }
 
     try {

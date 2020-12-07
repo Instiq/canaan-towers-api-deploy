@@ -59,6 +59,8 @@ const adminSchema = new mongoose.Schema({
         required: true
     }
 
+}, {
+    timestamps: true
 });
 
 adminSchema.virtual('quotes', {

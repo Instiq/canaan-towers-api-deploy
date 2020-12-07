@@ -1,5 +1,12 @@
+const errorout = (statusmessage, message) => {
+    return {
+        status: statusmessage,
+        message: message
+    };
+};
 
-exports.success = (data) => {
+
+const success = (data) => {
     return {
         status: 'success', 
         message: 'ok',
@@ -7,22 +14,13 @@ exports.success = (data) => {
     };
 };
 
-
-
-exports.error = (statusmessage, message) => {
-    return {
-        status: statusmessage,
-        message
-    };
-};
-
-exports.errorUnauthorized = (message) => {
+const errorUnauthorized = (message) => {
     return {
         message
     };
 };
- 
-exports.validation = (errors) => {
+
+const validation = (errors) => {
 return {
     message: "Validation errors",
     error: true,
@@ -30,3 +28,5 @@ return {
     errors
 };
 };
+
+module.exports = { errorout, success, errorUnauthorized, validation }

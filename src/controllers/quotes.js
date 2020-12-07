@@ -35,10 +35,13 @@ const viewQuotes = async (req, res) => {
     try {
         const pagination = req.query.pagination ? parseInt(req.query.pagination) : 10;
         const page = req.query.page ? parseInt(req.query.page) : 1;
+        const count = await Quotes.countDocuments({}).exec();
+        console.log('docCount', docCount)
         const quotes = await Quotes.find({})
         .limit(pagination)
         .skip((page - 1) * pagination)
-        res.status(200).json(success({ quotes }))
+
+        res.status(200).json(success({ quotes, count }))
     } catch (error) {
         res.status(500).json({message: e.message}) 
     }

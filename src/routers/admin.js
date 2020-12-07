@@ -1,6 +1,6 @@
 const express = require('express')
 const upload = require('../middleware/multer')
-var { createAdmin, createsubAdmin, revokeAdmin, activeAdmin, viewsubAdmin, singleLogout, logoutAll, updateProfile, adminLogin } = require('../controllers/admin')
+const { createAdmin, createsubAdmin, revokeAdmin, activeAdmin, viewsubAdmin, singleLogout, logoutAll, updateProfile, adminLogin } = require('../controllers/admin')
 const authAdmin = require('../middleware/authAdmin')
 const router = new express.Router() 
 
