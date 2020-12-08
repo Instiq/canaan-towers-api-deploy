@@ -104,8 +104,13 @@ const viewsubAdmin = async (req, res) => {
         if(!permission) {
             res.status(401).json(errorUnauthorized('Error. Unauthorized user'))
         }
+        const pagination = req.query.pagination ? parseInt(req.query.pagination) : 10;
+        const page = req.query.page ? parseInt(req.query.page) : 1;
+        const count = await Admin.countDocuments({}).exec();
         const admin = await Admin.find({ 'role': '2'})
-        res.status(200).json(success({ admin }))
+        .limit(pagination)
+        .skip((page - 1) * pagination)
+        res.status(200).json(success({ admin, count }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
