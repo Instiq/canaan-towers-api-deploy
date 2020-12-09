@@ -23,11 +23,9 @@ const createAdmin = async (req, res) => {
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
-}
+} 
 
 const createsubAdmin = async (req, res) => {
-
-
     const admin = new Admin({ 
         ...req.body, role: '2',
         active: true,

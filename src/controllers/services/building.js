@@ -116,7 +116,7 @@ const deleteSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         buildingCarousel.remove()
-        res.send(buildingCarousel)
+        res.status(200).json(success({ buildingCarousel }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -130,7 +130,7 @@ const deleteCarousel = async (req, res) => {
             return res.status(404).send()
         }
         buildingCarousel.remove()
-        res.send(buildingCarousel)
+        res.status(200).json(success({ buildingCarousel }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
