@@ -1,6 +1,6 @@
 const Quotes = require('../models/quotes')
 const { notifyCustomerQuoteSent, notifyAdminQuoteSent } = require('../email/account')
-const { success, error } = require('../responseFormatter/response')
+const { success, errorout } = require('../responseFormatter/response')
 
 
 const createQuote = async (req, res) => {
@@ -13,7 +13,7 @@ const createQuote = async (req, res) => {
             await quotes.save()
             res.status(201).json(success({ quotes }))
         } catch (error) {
-            res.status(400).json(error('Bad request', error.message)) 
+            res.status(400).json(errorout('Bad request', error.message)) 
         } 
     } else {
         const quotes = new Quotes({
@@ -25,7 +25,7 @@ const createQuote = async (req, res) => {
             notifyCustomerQuoteSent(req.body.email, req.body.name)
             notifyAdminQuoteSent(req.body.name)
         } catch (error) {
-            res.status(400).json(error('Bad request', error.message)) 
+            res.status(400).json(errorout('Bad request', error.message)) 
         }
     }
 } 
@@ -54,7 +54,7 @@ const singleQuote = async (req, res) => {
         const quotes = await Quotes.findOne({ _id })
 
         if (!quotes) {
-            return res.status(400).json(error('Bad request', error.message))
+            return res.status(400).json(errorout('Bad request', error.message))
         }
 
         res.send(quotes)
@@ -68,7 +68,7 @@ const deleteQuote = async (req, res) => {
         const quotes = await Quotes.findByIdAndDelete({ _id: req.params.id })
 
         if (!quotes) {
-            return res.status(404).json(error('Bad request', "Quote doesn't exist"))
+            return res.status(404).json(errorout('Bad request', "Quote doesn't exist"))
         }
 
         res.status(200).json(success({ quotes }))

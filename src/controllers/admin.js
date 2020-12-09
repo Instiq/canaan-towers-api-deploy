@@ -26,13 +26,11 @@ const createAdmin = async (req, res) => {
 }
 
 const createsubAdmin = async (req, res) => {
-    console.log(req.file)
 
 
     const admin = new Admin({ 
         ...req.body, role: '2',
         active: true,
-        image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
     })
     try {
         await admin.save()

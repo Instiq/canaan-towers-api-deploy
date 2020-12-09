@@ -10,7 +10,7 @@ const router = new express.Router()
 router.post('/admin', createAdmin)
 
 // Create subadmin
-router.post('/admin/create', authAdmin, upload.single('image'), createsubAdmin)
+router.post('/admin/create', authAdmin, createsubAdmin)
 
 // Revoke Subdmin access
 router.patch('/admin/revoke/:id', authAdmin, revokeAdmin)

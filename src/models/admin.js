@@ -41,9 +41,6 @@ const adminSchema = new mongoose.Schema({
             }
         }
     },
-    image: { 
-        type: String
-    },
     tokens: [{
         token: {
             type: String,

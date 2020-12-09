@@ -1,11 +1,10 @@
 const { BuildSlider, BuildingCarousel }  = require('../../models/services/building')
-
+const { success, errorout } = require('../../responseFormatter/response')
 
 const addCarousel = async (req, res) => {
     console.log('image', req.file)
     if(!req.file) {
-        res.status(400).send('You need to upload an image')
-        process.exit(1)
+        res.status(400).json(errorout('Bad request', 'You need to upload an image'))
     }
     const buildingCarousel = new BuildingCarousel({
         carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
@@ -13,9 +12,9 @@ const addCarousel = async (req, res) => {
 
     try {
         await buildingCarousel.save()
-        res.status(201).send(buildingCarousel)
+        res.status(201).json(success({ buildingCarousel })) 
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).json(errorout('Bad request', error.message))
     }
 }
 
@@ -23,8 +22,7 @@ const addCarousel = async (req, res) => {
 const addSlider = async (req, res) => {
     console.log('ede', req.file)
     if(!req.file) {
-        res.status(400).send('Upload an image')
-        process.exit(1)
+        res.status(400).json(errorout('Bad request', 'Upload an image'))
     }
     const buildingslider = new BuildSlider({
         ...req.body,
@@ -35,9 +33,9 @@ const addSlider = async (req, res) => {
 
     try {
         await buildingslider.save()
-        res.status(201).send(buildingslider)
+        res.status(201).json(success({ buildingslider }))
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).json(errorout('Bad request', error.message)) 
     }
 }
 
@@ -47,23 +45,22 @@ const viewSlider = async (req, res) => {
         const buildSlider = await BuildSlider.find({})
 
         res.send(buildSlider)
-    } catch (e) {
-        res.status(500).send('Error occured')
+    } catch (error) {
+        res.status(500).json({message: error.message}) 
     }
 }
 const viewCarousel = async (req, res) => {
     try {
         const buildingCarousel = await BuildingCarousel.find({})
-
-        res.send(buildingCarousel)
-    } catch (e) {
-        res.status(500).send('Error occured')
+        res.status(200).json(success({ buildingCarousel }))
+    } catch (error) {
+        res.status(500).json({message: error.message})
     }
 }
 
 const updateCarousel = async (req, res) => {
     if (!req.file || req.file.length > 1) {
-        return res.status(400).send({ error: 'Invalid updates!' })
+        return res.status(400).json(errorout('Bad request',  'Invalid updates!'))
     }
 
     let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
@@ -74,12 +71,12 @@ const updateCarousel = async (req, res) => {
         const buildingCarousel = await BuildingCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
         if (!buildingCarousel) {
-            return res.status(404).send()
+            return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         await buildingCarousel.save()
-        res.send(buildingCarousel)
-    } catch (e) {
-        res.status(400).send(e)
+        res.status(200).json(success({ buildingCarousel }))
+    } catch (error) {
+        res.status(400).json(errorout('Bad request', error.message)) 
     }
 }
 
@@ -90,7 +87,7 @@ const updateSlider = async (req, res) => {
     console.log(isValidOperation);
 
     if (!isValidOperation || !req.file) {
-        return res.status(400).send({ error: 'Invalid updates!' })
+        return res.status(400).json(errorout('Bad request',  'Invalid updates!'))
     }
 
 
@@ -102,12 +99,12 @@ const updateSlider = async (req, res) => {
         const buildSlider = await BuildSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
         if (!buildSlider) {
-            return res.status(404).send()
+            return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await buildSlider.save()
-        res.send(buildSlider)
-    } catch (e) {
-        res.status(400).send(e)
+        res.status(200).json(success({ buildSlider }))
+    } catch (error) {
+        res.status(400).json(errorout('Bad request', error.message)) 
     }
 }
 
@@ -116,12 +113,12 @@ const deleteSlider = async (req, res) => {
         const buildingCarousel = await BuildingCarousel.findByIdAndDelete(req.params.id)
 
         if (!buildingCarousel) {
-            return res.status(404).send()
+            return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         buildingCarousel.remove()
         res.send(buildingCarousel)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).json({message: e.message})
     }
 }
 
@@ -135,7 +132,7 @@ const deleteCarousel = async (req, res) => {
         buildingCarousel.remove()
         res.send(buildingCarousel)
     } catch (e) {
-        res.status(500).send()
+        res.status(500).json({message: e.message})
     }
 }
 
