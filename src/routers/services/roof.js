@@ -11,6 +11,7 @@ router.post('/roof/carousel', authAdmin, upload.single('image'), addCarousel)
 
 // Add Catalogue
 router.post('/roof/catalogue', authAdmin, upload.single('image'), addCatalogue)
+
 // Add Project
 router.post('/roof/slider', authAdmin, upload.single('image'), addSlider)
 
