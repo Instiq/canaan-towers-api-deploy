@@ -53,9 +53,9 @@ const viewSlider =  async (req, res) => {
 
 const viewCarousel =  async (req, res) => {
     try {
-        const roadSlider = await RoadSlider.find({})
+        const roadCarousel = await RoadCarousel.find({})
 
-        res.status(200).json(success({ roadSlider }))
+        res.status(200).json(success({ roadCarousel }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

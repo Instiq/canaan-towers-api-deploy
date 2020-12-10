@@ -1,18 +1,19 @@
-const { FurnishSlider, FurnishCarousel, FurnishCatalogue }  = require('../../models/services/furnishing')
-const { success, errorout } = require('../../responseFormatter/response')
+const { RoofSlider, RoofCarousel, RoofCatalogue }  = require('../../models/services/roof')
+
 
 const addCarousel = async (req, res) => {
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'You need to upload an image'))
     }
 
-    const furnishCarousel = new FurnishCarousel({
+    const roofCarousel = new RoofCarousel({
         carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
-    })
+    }) 
+
 
     try {
-        await furnishCarousel.save()
-        res.status(201).json(success({ furnishCarousel }))
+        await roofCarousel.save()
+        res.status(201).json(success({ roofCarousel }))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -24,7 +25,7 @@ const addCatalogue = async (req, res) => {
     }
 
     req.body.price = `₦${req.body.price}`
-    const furnishcatalogue = new FurnishCatalogue({
+    const roofcatalogue = new RoofCatalogue({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
         title: req.body.title,
@@ -33,7 +34,7 @@ const addCatalogue = async (req, res) => {
 
 
     try {
-        await furnishcatalogue.save()
+        await roofcatalogue.save()
         res.status(201).json(success({ furnishcatalogue }))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
@@ -44,14 +45,14 @@ const addSlider = async (req, res) => {
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'Upload an image'))
     }
-    const furnishslider = new FurnishSlider({
+    const roofslider = new RoofSlider({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`
     })
 
     try {
-        await furnishslider.save()
-        res.status(201).json(success({ furnishslider }))
+        await roofslider.save()
+        res.status(201).json(success({ roofslider }))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -59,19 +60,19 @@ const addSlider = async (req, res) => {
 
 const viewSlider = async (req, res) => {
     try {
-        const furnishSlider = await FurnishSlider.find({})
+        const roofSlider = await RoofSlider.find({})
 
-        res.status(200).json(success({ furnishSlider }))
+        res.json(success({ roofSlider }))
     } catch (e) {
-        res.status(500).json({message: e.message})
+        res.status(500).send('Error occured')
     }
 }
 
 const viewCatalogue = async (req, res) => {
     try {
-        const furnishcatalogue = await FurnishCatalogue.find({})
+        const roofcatalogue = await RoofCatalogue.find({})
 
-        res.status(200).json(success({ furnishcatalogue }))
+        res.send(roofcatalogue)
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -79,9 +80,9 @@ const viewCatalogue = async (req, res) => {
 
 const viewCarousel = async (req, res) => {
     try {
-        const furnishCarousel = await FurnishCarousel.find({})
+        const roofCarousel = await RoofCarousel.find({})
 
-        res.status(200).json(success({ furnishCarousel }))
+        res.status(200).json(success({ roofCarousel }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -97,19 +98,19 @@ const updateCarousel =  async (req, res) => {
     req.body = { ...req.body, carousel: image }
 
     try {
-        const furnishCarousel = await FurnishCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const roofCarousel = await RoofCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishCarousel) {
+        if (!roofCarousel) {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
-        await furnishCarousel.save()
-        res.status(200).json(success({ furnishCarousel }))
+        await roofCarousel.save()
+        res.send(roofCarousel)
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message)) 
     }
 }
 
-const updateSlider =  async (req, res) => {
+const updateSlider = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['title', 'description']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -124,19 +125,19 @@ const updateSlider =  async (req, res) => {
     req.body = { ...req.body, image }
     
     try {
-        const furnishSlider = await FurnishSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const roofSlider = await RoofSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishSlider) {
+        if (!roofSlider) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        await furnishSlider.save()
-        res.status(200).json(success({ furnishSlider }))
+        await roofSlider.save()
+        res.status(200).json(success({ roofSlider }))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
 }
 
-const updateCatalogue =  async (req, res) => {
+const updateCatalogue = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['price', 'description', 'item', 'specification']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -152,59 +153,58 @@ const updateCatalogue =  async (req, res) => {
     req.body = { ...req.body, image }
     
     try {
-        const furnishCatalogue = await FurnishCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const roofCatalogue = await RoofCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishCatalogue) {
+        if (!roofCatalogue) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        await furnishCatalogue.save()
-        res.status(200).json(success({ furnishCatalogue }))
+        await roofCatalogue.save()
+        res.status(200).json(success({ roofCatalogue }))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
 }
 
-const deleteCarousel =  async (req, res) => {
+const deleteCarousel = async (req, res) => {
     try {
-        const furnishCarousel = await FurnishCarousel.findByIdAndDelete(req.params.id)
+        const roofCarousel = await RoofCarousel.findByIdAndDelete(req.params.id)
 
-        if (!furnishCarousel) {
+        if (!roofCarousel) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        furnishCarousel.remove()
-        res.status(200).json(success({ furnishCarousel }))
+        roofCarousel.remove()
+        res.status(200).json(success({ roofCarousel }))
     } catch (e) {
         res.status(500).json({ message: e.message })
     }
 }
 
-const deleteSlider =  async (req, res) => {
+const deleteSlider = async (req, res) => {
     try {
-        const furnishSlider = await FurnishSlider.findByIdAndDelete(req.params.id)
+        const roofSlider = await RoofSlider.findByIdAndDelete(req.params.id)
 
-        if (!furnishSlider) {
+        if (!roofSlider) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        furnishSlider.remove()
-        res.status(200).json(success({ furnishSlider }))
+        roofSlider.remove()
+        res.status(200).json(success({ roofSlider }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
 }
 
-const deleteCatalogue =  async (req, res) => {
+const deleteCatalogue = async (req, res) => {
     try {
-        const furnishCatalogue = await FurnishCatalogue.findByIdAndDelete(req.params.id)
+        const roofCatalogue = await RoofCatalogue.findByIdAndDelete(req.params.id)
 
-        if (!furnishCatalogue) {
+        if (!roofCatalogue) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        furnishCatalogue.remove()
-        res.status(200).json(success({ furnishCatalogue }))
+        roofCatalogue.remove()
+        res.json(success({ roofCatalogue }))
     } catch (e) {
-        res.status(500).json({message: e.message})
+        res.status(500).json({ message: e.message })
     }
 }
 
 module.exports = { addCarousel, addCatalogue, addSlider, viewSlider, viewCatalogue, viewCarousel, updateCarousel, updateSlider, updateCatalogue, deleteCarousel, deleteSlider, deleteCatalogue }
-

@@ -1,5 +1,4 @@
 const express = require('express')
-const { BuildSlider, BuildingCarousel }  = require('../../models/services/building')
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const { addCarousel, addSlider, viewCarousel, viewSlider, updateCarousel, updateSlider, deleteSlider, deleteCarousel } = require('../../controllers/services/building')

@@ -1,10 +1,8 @@
 const express = require('express')
-
 const authAdmin = require('../../middleware/authAdmin')
 const upload = require('../../middleware/multer')
 const { addCarousel, addCatalogue, addSlider, viewSlider, viewCarousel, viewCatalogue, updateCarousel, updateSlider, updateCatalogue, deleteCarousel, deleteSlider, deleteCatalogue } = require('../../controllers/services/furnishing')
 const router = new express.Router() 
-
  
 
 // Add Carousel
