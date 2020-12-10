@@ -19,13 +19,13 @@ router.post('/roof/slider', authAdmin, upload.single('image'), addSlider)
 router.get('/roof/slider', viewSlider)
 
 
-// view catalogue
+// view catalogue 
 router.get('/roof/catalogue', viewCatalogue)
 
 // view carousels
 router.get('/roof/carousel', viewCarousel)
 
-
+ 
 // Updates Carousel
 router.patch('/roof/carousel/:id', authAdmin, upload.single('image'), updateCarousel)
 

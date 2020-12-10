@@ -9,7 +9,7 @@ const addCarousel = async (req, res) => {
 
     const roofCarousel = new RoofCarousel({
         carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
-    }) 
+    })
 
 
     try {
@@ -63,9 +63,9 @@ const viewSlider = async (req, res) => {
     try {
         const roofSlider = await RoofSlider.find({})
 
-        res.json(success(roofSlider))
+        res.status(200).json(success(roofSlider))
     } catch (e) {
-        res.status(500).send('Error occured')
+        res.status(500).json({message: e.message})
     }
 }
 
@@ -73,7 +73,7 @@ const viewCatalogue = async (req, res) => {
     try {
         const roofcatalogue = await RoofCatalogue.find({})
 
-        res.send(roofcatalogue)
+        res.status(200).json(success(roofcatalogue))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
