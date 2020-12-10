@@ -15,7 +15,7 @@ const addCarousel = async (req, res) => {
 
     try {
         await roadCarousel.save()
-        res.status(201).json(success({ roadCarousel }))
+        res.status(201).json(success(roadCarousel))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -35,7 +35,7 @@ const addSlider = async (req, res) => {
 
     try {
         await roadslider.save()
-        res.status(201).json(success({ roadslider }))
+        res.status(201).json(success(roadslider))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -45,7 +45,7 @@ const viewSlider =  async (req, res) => {
     try {
         const roadSlider = await RoadSlider.find({})
 
-        res.status(200).json(success({ roadSlider }))
+        res.status(200).json(success(roadSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -55,7 +55,7 @@ const viewCarousel =  async (req, res) => {
     try {
         const roadCarousel = await RoadCarousel.find({})
 
-        res.status(200).json(success({ roadCarousel }))
+        res.status(200).json(success(roadCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -78,7 +78,7 @@ const updateCarousel = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         await roadCarousel.save()
-        res.status(200).json(success({ roadCarousel }))
+        res.status(200).json(success(roadCarousel))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message)) 
     }
@@ -107,7 +107,7 @@ const updateSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         await roadSlider.save()
-        res.status(200).json(success({ roadSlider }))
+        res.status(200).json(success(roadSlider))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message)) 
     }
@@ -121,7 +121,7 @@ const deleteCarousel = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         roadCarousel.remove()
-        res.status(200).json(success({ roadCarousel }))
+        res.status(200).json(success(roadCarousel))
     } catch (e) {
         res.status(500).json({ message: e.message })
     }
@@ -135,7 +135,7 @@ const deleteSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         roadSlider.remove()
-        res.status(200).json(success({ furnishSlider }))
+        res.status(200).json(success(roadSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

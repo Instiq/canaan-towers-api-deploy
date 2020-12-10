@@ -15,7 +15,7 @@ const addCarousel = async (req, res) => {
 
     try {
         await powerCarousel.save()
-        res.status(201).json(success({ powerCarousel }))
+        res.status(201).json(success(powerCarousel))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -37,7 +37,7 @@ const addCatalogue= async (req, res) => {
 
     try {
         await powercatalogue.save()
-        res.status(201).json(success({ powercatalogue }))
+        res.status(201).json(success(powercatalogue))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -54,7 +54,7 @@ const addSlider = async (req, res) => {
 
     try {
         await powerslider.save()
-        res.status(201).json(success({ powerslider }))
+        res.status(201).json(success(powerslider))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
@@ -64,7 +64,7 @@ const viewSlider = async (req, res) => {
     try {
         const powerSlider = await PowerSlider.find({})
 
-        res.status(200).json(success({ powerSlider }))
+        res.status(200).json(success(powerSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -74,7 +74,7 @@ const viewCatalogue = async (req, res) => {
     try {
         const powercatalogue = await PowerCatalogue.find({})
 
-        res.status(200).json(success({ powercatalogue })) 
+        res.status(200).json(success(powercatalogue)) 
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -84,7 +84,7 @@ const viewCarousel = async (req, res) => {
     try {
         const powerCarousel = await PowerCarousel.find({})
 
-        res.status(200).json(success({ powerCarousel }))
+        res.status(200).json(success(powerCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -106,7 +106,7 @@ const updateCarousel = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         await powerCarousel.save()
-        res.status(200).json(success({ powerCarousel }))
+        res.status(200).json(success(powerCarousel))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message)) 
     }
@@ -133,7 +133,7 @@ const updateSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await powerSlider.save()
-        res.status(200).json(success({ powerSlider }))
+        res.status(200).json(success(powerSlider))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
@@ -160,7 +160,7 @@ const updateCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await powerCatalogue.save()
-        res.status(200).json(success({ powerCatalogue }))
+        res.status(200).json(success(powerCatalogue))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
@@ -175,7 +175,7 @@ const deleteCarousel = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         powerCarousel.remove()
-        res.status(200).json(success({ powerCarousel }))
+        res.status(200).json(success(powerCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -189,7 +189,7 @@ const deleteSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         powerSlider.remove()
-        res.status(200).json(success({ powerSlider }))
+        res.status(200).json(success(powerSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -203,7 +203,7 @@ const deleteCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         powerSlider.remove()
-        res.status(200).json(success({ powerSlider }))
+        res.status(200).json(success(powerSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

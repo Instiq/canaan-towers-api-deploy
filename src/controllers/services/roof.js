@@ -13,7 +13,7 @@ const addCarousel = async (req, res) => {
 
     try {
         await roofCarousel.save()
-        res.status(201).json(success({ roofCarousel }))
+        res.status(201).json(success(roofCarousel))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -35,7 +35,7 @@ const addCatalogue = async (req, res) => {
 
     try {
         await roofcatalogue.save()
-        res.status(201).json(success({ furnishcatalogue }))
+        res.status(201).json(success(roofcatalogue))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -52,7 +52,7 @@ const addSlider = async (req, res) => {
 
     try {
         await roofslider.save()
-        res.status(201).json(success({ roofslider }))
+        res.status(201).json(success(roofslider))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -62,7 +62,7 @@ const viewSlider = async (req, res) => {
     try {
         const roofSlider = await RoofSlider.find({})
 
-        res.json(success({ roofSlider }))
+        res.json(success(roofSlider))
     } catch (e) {
         res.status(500).send('Error occured')
     }
@@ -82,7 +82,7 @@ const viewCarousel = async (req, res) => {
     try {
         const roofCarousel = await RoofCarousel.find({})
 
-        res.status(200).json(success({ roofCarousel }))
+        res.status(200).json(success(roofCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -104,7 +104,7 @@ const updateCarousel =  async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         await roofCarousel.save()
-        res.send(roofCarousel)
+        res.status(200).json(success(roofCarousel))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message)) 
     }
@@ -131,7 +131,7 @@ const updateSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await roofSlider.save()
-        res.status(200).json(success({ roofSlider }))
+        res.status(200).json(success(roofSlider))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
@@ -159,7 +159,7 @@ const updateCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await roofCatalogue.save()
-        res.status(200).json(success({ roofCatalogue }))
+        res.status(200).json(success(roofCatalogue))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
@@ -173,7 +173,7 @@ const deleteCarousel = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         roofCarousel.remove()
-        res.status(200).json(success({ roofCarousel }))
+        res.status(200).json(success(roofCarousel))
     } catch (e) {
         res.status(500).json({ message: e.message })
     }
@@ -187,7 +187,7 @@ const deleteSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         roofSlider.remove()
-        res.status(200).json(success({ roofSlider }))
+        res.status(200).json(success(roofSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -201,7 +201,7 @@ const deleteCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         roofCatalogue.remove()
-        res.json(success({ roofCatalogue }))
+        res.status(200).json(success(roofCatalogue))
     } catch (e) {
         res.status(500).json({ message: e.message })
     }

@@ -10,8 +10,8 @@ const success = (data) => {
     return {
         status: 'success', 
         message: 'ok',
-        data
-    };
+        data: data
+    }; 
 };
 
 const errorUnauthorized = (message) => {

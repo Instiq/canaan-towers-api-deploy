@@ -15,7 +15,7 @@ const addCarousel = async (req, res) => {
 
     try {
         await automobileCarousel.save()
-        res.status(201).json(success({ automobileCarousel }))
+        res.status(201).json(success(automobileCarousel))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -38,7 +38,7 @@ const addCatalogue = async (req, res) => {
 
     try {
         await automobilecatalogue.save()
-        res.status(201).json(success({ automobilecatalogue }))
+        res.status(201).json(success(automobilecatalogue))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
@@ -55,7 +55,7 @@ const addSlider = async (req, res) => {
 
     try {
         await automobileslider.save()
-        res.status(201).json(success({ automobileslider })) 
+        res.status(201).json(success(automobileslider)) 
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -65,7 +65,7 @@ const viewSlider = async (req, res) => {
     try {
         const automobileSlider = await AutomobileSlider.find({})
 
-        res.status(200).json(success({ automobileSlider })) 
+        res.status(200).json(success(automobileSlider)) 
     } catch (error) {
         res.status(500).json({message: error.message}) 
     }
@@ -75,7 +75,7 @@ const viewCatalogue = async (req, res) => {
     try {
         const automobilecatalogue = await AutomobileCatalogue.find({})
 
-        res.status(200).json(success({ automobilecatalogue })) 
+        res.status(200).json(success(automobilecatalogue)) 
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -85,7 +85,7 @@ const viewCarousel = async (req, res) => {
     try {
         const automobileCarousel = await AutomobileCarousel.find({})
 
-        res.status(200).json(success({ automobileCarousel }))
+        res.status(200).json(success(automobileCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -134,7 +134,7 @@ const updateSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await automobileSlider.save()
-        res.status(200).json(success({ automobileSlider }))
+        res.status(200).json(success(automobileSlider))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
@@ -162,7 +162,7 @@ const updateCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await automobileCatalogue.save()
-        res.status(200).json(success({ automobileCatalogue }))
+        res.status(200).json(success(automobileCatalogue))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
@@ -190,7 +190,7 @@ const deleteSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         automobileSlider.remove()
-        res.status(200).json(success({ automobileSlider }))
+        res.status(200).json(success(automobileSlider))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -204,7 +204,7 @@ const deleteCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         automobileCatalogue.remove()
-        res.status(200).json(success({ automobileCatalogue }))
+        res.status(200).json(success(automobileCatalogue))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

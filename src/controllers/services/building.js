@@ -11,7 +11,7 @@ const addCarousel = async (req, res) => {
 
     try {
         await buildingCarousel.save()
-        res.status(201).json(success({ buildingCarousel })) 
+        res.status(201).json(success(buildingCarousel))  
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -31,7 +31,7 @@ const addSlider = async (req, res) => {
 
     try {
         await buildingslider.save()
-        res.status(201).json(success({ buildingslider }))
+        res.status(201).json(success(buildingslider))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
@@ -50,7 +50,7 @@ const viewSlider = async (req, res) => {
 const viewCarousel = async (req, res) => {
     try {
         const buildingCarousel = await BuildingCarousel.find({})
-        res.status(200).json(success({ buildingCarousel }))
+        res.status(200).json(success(buildingCarousel))
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -72,7 +72,7 @@ const updateCarousel = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
         await buildingCarousel.save()
-        res.status(200).json(success({ buildingCarousel }))
+        res.status(200).json(success(buildingCarousel))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
@@ -100,7 +100,7 @@ const updateSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await buildSlider.save()
-        res.status(200).json(success({ buildSlider }))
+        res.status(200).json(success(buildSlider))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }
@@ -114,7 +114,7 @@ const deleteSlider = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         buildingCarousel.remove()
-        res.status(200).json(success({ buildingCarousel }))
+        res.status(200).json(success(buildingCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -128,7 +128,7 @@ const deleteCarousel = async (req, res) => {
             return res.status(404).send()
         }
         buildingCarousel.remove()
-        res.status(200).json(success({ buildingCarousel }))
+        res.status(200).json(success(buildingCarousel))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
