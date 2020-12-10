@@ -42,7 +42,7 @@ const viewSlider = async (req, res) => {
     try {
         const buildSlider = await BuildSlider.find({})
 
-        res.send(buildSlider)
+        res.status(200).json(success(buildSlider))
     } catch (error) {
         res.status(500).json({message: error.message}) 
     }
