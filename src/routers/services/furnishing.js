@@ -5,7 +5,7 @@ const upload = require('../../middleware/multer')
 const { addCarousel, addCatalogue, addSlider, viewSlider, viewCarousel, viewCatalogue, updateCarousel, updateSlider, updateCatalogue, deleteCarousel, deleteSlider, deleteCatalogue } = require('../../controllers/services/furnishing')
 const router = new express.Router() 
 
-
+ 
 
 // Add Carousel
 router.post('/furnish/carousel', authAdmin, upload.single('image'), addCarousel)
@@ -15,7 +15,7 @@ router.post('/furnish/catalogue', authAdmin, upload.single('image'), addCatalogu
 // Add Project
 router.post('/furnish/slider', authAdmin, upload.single('image'), addSlider)
 
-// View projects
+// View projects 
 router.get('/furnish/slider', viewSlider)
 
 // view catalogue

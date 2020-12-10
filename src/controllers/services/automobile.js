@@ -20,7 +20,7 @@ const addCarousel = async (req, res) => {
         res.status(400).json(errorout('Bad request', error.message))
     }
 }
-
+ 
 
 const addCatalogue = async (req, res) => {
     if(!req.file) {
@@ -87,13 +87,13 @@ const viewCarousel = async (req, res) => {
 
         res.status(200).json(success({ automobileCarousel }))
     } catch (e) {
-        res.status(500).json({message: error.message})
+        res.status(500).json({message: e.message})
     }
 }
 
 const updateCarousel = async (req, res) => {
     if (!req.file || req.file.length > 1) {
-        return res.status(400).send({ error: 'Invalid updates!' })
+        return res.status(400).json(errorout('Bad request','Invalid updates!' ))
     }
 
     let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
@@ -136,7 +136,7 @@ const updateSlider = async (req, res) => {
         await automobileSlider.save()
         res.status(200).json(success({ automobileSlider }))
     } catch (e) {
-        res.status(400).json(errorout('Bad request', error.message))
+        res.status(400).json(errorout('Bad request', e.message))
     }
 }
 
@@ -162,7 +162,7 @@ const updateCatalogue = async (req, res) => {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
         await automobileCatalogue.save()
-        res.json(success({ automobileCatalogue }))
+        res.status(200).json(success({ automobileCatalogue }))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message)) 
     }

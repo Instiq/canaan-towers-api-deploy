@@ -2,7 +2,6 @@ const { BuildSlider, BuildingCarousel }  = require('../../models/services/buildi
 const { success, errorout } = require('../../responseFormatter/response')
 
 const addCarousel = async (req, res) => {
-    console.log('image', req.file)
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'You need to upload an image'))
     }
@@ -20,7 +19,6 @@ const addCarousel = async (req, res) => {
 
 
 const addSlider = async (req, res) => {
-    console.log('ede', req.file)
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'Upload an image'))
     }

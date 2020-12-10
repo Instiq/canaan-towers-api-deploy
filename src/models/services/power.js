@@ -31,8 +31,7 @@ const PowerCatalogue = mongoose.model('PowerCatalogue', {
         required: true
     },
     price: { 
-        type: String,
-        required: true
+        type: String
     },
     description: { 
         type: String,

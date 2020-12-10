@@ -31,8 +31,7 @@ const AutomobileCatalogue = mongoose.model('AutomobileCatalogue', {
         required: true
     },
     price: { 
-        type: String,
-        required: true
+        type: String
     },
     description: { 
         type: String,

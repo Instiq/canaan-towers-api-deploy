@@ -1,31 +1,33 @@
-const { FurnishSlider, FurnishCarousel, FurnishCatalogue }  = require('../../models/services/furnishing')
+const { PowerSlider, PowerCarousel, PowerCatalogue }  = require('../../models/services/power')
 const { success, errorout } = require('../../responseFormatter/response')
+
+
 
 const addCarousel = async (req, res) => {
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'You need to upload an image'))
-    }
+    } 
 
-    const furnishCarousel = new FurnishCarousel({
+    const powerCarousel = new PowerCarousel({
         carousel: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
     })
 
 
     try {
-        await furnishCarousel.save()
-        res.status(201).json(success({ furnishCarousel }))
+        await powerCarousel.save()
+        res.status(201).json(success({ powerCarousel }))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
 }
 
-const addCatalogue = async (req, res) => {
+const addCatalogue= async (req, res) => {
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'Upload an image'))
     }
 
     req.body.price = `₦${req.body.price}`
-    const furnishcatalogue = new FurnishCatalogue({
+    const powercatalogue = new PowerCatalogue({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
         title: req.body.title,
@@ -34,8 +36,8 @@ const addCatalogue = async (req, res) => {
 
 
     try {
-        await furnishcatalogue.save()
-        res.status(201).json(success({ furnishcatalogue }))
+        await powercatalogue.save()
+        res.status(201).json(success({ powercatalogue }))
     } catch (error) {
         res.status(400).json(errorout('Bad request', error.message))
     }
@@ -45,24 +47,24 @@ const addSlider = async (req, res) => {
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'Upload an image'))
     }
-    const furnishslider = new FurnishSlider({
+    const powerslider = new PowerSlider({
         ...req.body,
         image: `${process.env.DEPLOYED_URL}/${req.file.filename}`
     })
 
     try {
-        await furnishslider.save()
-        res.status(201).json(success({ furnishslider }))
+        await powerslider.save()
+        res.status(201).json(success({ powerslider }))
     } catch (error) {
-        res.status(400).json(errorout('Bad request', error.message))
+        res.status(400).json(errorout('Bad request', error.message)) 
     }
 }
 
 const viewSlider = async (req, res) => {
     try {
-        const furnishSlider = await FurnishSlider.find({})
+        const powerSlider = await PowerSlider.find({})
 
-        res.status(200).json(success({ furnishSlider }))
+        res.status(200).json(success({ powerSlider }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -70,9 +72,9 @@ const viewSlider = async (req, res) => {
 
 const viewCatalogue = async (req, res) => {
     try {
-        const furnishcatalogue = await FurnishCatalogue.find({})
+        const powercatalogue = await PowerCatalogue.find({})
 
-        res.json(success({ furnishcatalogue }))
+        res.status(200).json(success({ powercatalogue })) 
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -80,15 +82,15 @@ const viewCatalogue = async (req, res) => {
 
 const viewCarousel = async (req, res) => {
     try {
-        const furnishCarousel = await FurnishCarousel.find({})
+        const powerCarousel = await PowerCarousel.find({})
 
-        res.status(200).json(success({ furnishCarousel }))
+        res.status(200).json(success({ powerCarousel }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
 }
 
-const updateCarousel =  async (req, res) => {
+const updateCarousel = async (req, res) => {
     if (!req.file || req.file.length > 1) {
         return res.status(400).json(errorout('Bad request','Invalid updates!' ))
     }
@@ -98,19 +100,19 @@ const updateCarousel =  async (req, res) => {
     req.body = { ...req.body, carousel: image }
 
     try {
-        const furnishCarousel = await FurnishCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const powerCarousel = await PowerCarousel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishCarousel) {
+        if (!powerCarousel) {
             return res.status(404).json(errorout('Bad request', 'Not found')) 
         }
-        await furnishCarousel.save()
-        res.status(200).json(success({ furnishCarousel }))
+        await powerCarousel.save()
+        res.status(200).json(success({ powerCarousel }))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message)) 
     }
 }
 
-const updateSlider =  async (req, res) => {
+const updateSlider = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['title', 'description']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -125,23 +127,22 @@ const updateSlider =  async (req, res) => {
     req.body = { ...req.body, image }
     
     try {
-        const furnishSlider = await FurnishSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const powerSlider = await PowerSlider.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishSlider) {
+        if (!powerSlider) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        await furnishSlider.save()
-        res.status(200).json(success({ furnishSlider }))
+        await powerSlider.save()
+        res.status(200).json(success({ powerSlider }))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
 }
 
-const updateCatalogue =  async (req, res) => {
+const updateCatalogue = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['price', 'description', 'item', 'specification']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log('g', isValidOperation, req.body)
     if (!isValidOperation || !req.file) {
         return res.status(400).json(errorout('Bad request',  'Invalid updates!'))
     }
@@ -153,60 +154,61 @@ const updateCatalogue =  async (req, res) => {
     req.body = { ...req.body, image }
     
     try {
-        const furnishCatalogue = await FurnishCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        const powerCatalogue = await PowerCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
-        if (!furnishCatalogue) {
+        if (!powerCatalogue) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        await furnishCatalogue.save()
-        res.status(200).json(success({ furnishCatalogue }))
+        await powerCatalogue.save()
+        res.status(200).json(success({ powerCatalogue }))
     } catch (e) {
         res.status(400).json(errorout('Bad request', e.message))
     }
 }
 
-const deleteCarousel =  async (req, res) => {
-    try {
-        const furnishCarousel = await FurnishCarousel.findByIdAndDelete(req.params.id)
 
-        if (!furnishCarousel) {
+const deleteCarousel = async (req, res) => {
+    try {
+        const powerCarousel = await PowerCarousel.findByIdAndDelete(req.params.id)
+
+        if (!powerCarousel) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        furnishCarousel.remove()
-        res.status(200).json(success({ furnishCarousel }))
-    } catch (e) {
-        res.status(500).json({ message: e.message })
-    }
-}
-
-const deleteSlider =  async (req, res) => {
-    try {
-        const furnishSlider = await FurnishSlider.findByIdAndDelete(req.params.id)
-
-        if (!furnishSlider) {
-            return res.status(404).json(errorout('Bad request', 'Not found'))
-        }
-        furnishSlider.remove()
-        res.status(200).json(success({ furnishSlider }))
+        powerCarousel.remove()
+        res.status(200).json(success({ powerCarousel }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
 }
 
-const deleteCatalogue =  async (req, res) => {
+const deleteSlider = async (req, res) => {
     try {
-        const furnishCatalogue = await FurnishCatalogue.findByIdAndDelete(req.params.id)
+        const powerSlider = await PowerSlider.findByIdAndDelete(req.params.id)
 
-        if (!furnishCatalogue) {
+        if (!powerSlider) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
         }
-        furnishCatalogue.remove()
-        res.status(200).json(success({ furnishCatalogue }))
+        powerSlider.remove()
+        res.status(200).json(success({ powerSlider }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
 }
 
-module.exports = { addCarousel, addCatalogue, addSlider, viewSlider, viewCatalogue, viewCarousel, updateCarousel, updateSlider, updateCatalogue, deleteCarousel, deleteSlider, deleteCatalogue }
+const deleteCatalogue = async (req, res) => {
+    try {
+        const powerSlider = await PowerSlider.findByIdAndDelete(req.params.id)
 
-// module.exports = { addCarousel, addSlider, viewCarousel, viewSlider, updateCarousel, updateSlider, deleteSlider, deleteCarousel }
+        if (!powerSlider) {
+            return res.status(404).json(errorout('Bad request', 'Not found'))
+        }
+        powerSlider.remove()
+        res.status(200).json(success({ powerSlider }))
+    } catch (e) {
+        res.status(500).json({message: e.message})
+    }
+}
+
+
+
+module.exports = { addCarousel, addCatalogue, addSlider, viewSlider, viewCatalogue, viewCarousel, updateCatalogue, updateCarousel, updateSlider, deleteCarousel, deleteSlider, deleteCatalogue } 

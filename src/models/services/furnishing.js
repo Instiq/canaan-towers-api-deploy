@@ -10,7 +10,7 @@ const FurnishSlider = mongoose.model('FurnishSlider', {
     image: { 
         type: String,
         required: true
-    },
+    }, 
     title: { 
         type: String,
         required: true
@@ -31,8 +31,7 @@ const FurnishCatalogue = mongoose.model('FurnishCatalogue', {
         required: true
     },
     price: { 
-        type: String,
-        required: true
+        type: String
     },
     description: { 
         type: String,
