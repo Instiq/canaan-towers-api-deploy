@@ -72,7 +72,7 @@ const viewCatalogue = async (req, res) => {
     try {
         const furnishcatalogue = await FurnishCatalogue.find({})
 
-        res.json(success({ furnishcatalogue }))
+        res.status(200).json(success({ furnishcatalogue }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -209,4 +209,3 @@ const deleteCatalogue =  async (req, res) => {
 
 module.exports = { addCarousel, addCatalogue, addSlider, viewSlider, viewCatalogue, viewCarousel, updateCarousel, updateSlider, updateCatalogue, deleteCarousel, deleteSlider, deleteCatalogue }
 
-// module.exports = { addCarousel, addSlider, viewCarousel, viewSlider, updateCarousel, updateSlider, deleteSlider, deleteCarousel }
