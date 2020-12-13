@@ -41,8 +41,11 @@ const createsubAdmin = async (req, res) => {
 
 const adminLogin = async (req, res) => {
     try {
-        req.body.active = true
-        const admin = await Admin.findByCredentials(req.body.email, req.body.password, req.body.active)
+        const admin = await Admin.findByCredentials(req.body.email, req.body.password) 
+        if(admin.active === false) {
+            res.status(400).json(errorout('Bad request', 'Email or Password incorrect')) 
+            console.log('error mehn')
+        }
         const token = await admin.generateAuthToken()
         res.status(200).json(success({ admin, token }))
     } catch (error) {
