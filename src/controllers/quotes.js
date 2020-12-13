@@ -57,7 +57,7 @@ const singleQuote = async (req, res) => {
             return res.status(400).json(errorout('Bad request', error.message))
         }
 
-        res.send(quotes)
+        res.status(200).json(success(quotes))
     } catch (e) {
         res.status(500).json({message: e.message}) 
     }
@@ -71,7 +71,7 @@ const deleteQuote = async (req, res) => {
             return res.status(404).json(errorout('Bad request', "Quote doesn't exist"))
         }
 
-        res.status(200).json(success({ quotes }))
+        res.status(200).json(success(quotes))
 
     } catch (e) {
         res.status(500).json({message: e.message})

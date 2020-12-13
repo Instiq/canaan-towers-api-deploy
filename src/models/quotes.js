@@ -39,7 +39,7 @@ const Quotes = mongoose.model('Quotes', {
     },
     image: { 
         type: String
-    }  
+    }
 })
 
 module.exports = Quotes; 

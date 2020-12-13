@@ -66,7 +66,7 @@ const revokeAdmin = async (req, res) => {
         }
 
         await admin.save()
-        res.status(200).json(success( admin))
+        res.status(200).json(success({admin }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

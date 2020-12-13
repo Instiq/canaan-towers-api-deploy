@@ -108,7 +108,7 @@ const updateSlider = async (req, res) => {
 
 const deleteSlider = async (req, res) => {
     try {
-        const buildingCarousel = await BuildingCarousel.findByIdAndDelete(req.params.id)
+        const buildingCarousel = await BuildSlider.findByIdAndDelete(req.params.id)
 
         if (!buildingCarousel) {
             return res.status(404).json(errorout('Bad request', 'Not found'))
