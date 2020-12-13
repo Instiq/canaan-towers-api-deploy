@@ -28,8 +28,7 @@ router.get('/automobile/carousel', viewCarousel)
 
 // Updates Carousel
 router.patch('/automobile/carousel/:id', authAdmin, upload.single('image'), updateCarousel)
-
-
+ 
 // Update Slider
 router.patch('/automobile/slider/:id', authAdmin, upload.single('image'), updateSlider)
 // Update Catalogue

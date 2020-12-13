@@ -94,7 +94,7 @@ const viewCarousel = async (req, res) => {
 const updateCarousel = async (req, res) => {
     if (!req.file || req.file.length > 1) {
         return res.status(400).json(errorout('Bad request','Invalid updates!' ))
-    }
+    } 
 
     let image = `${process.env.DEPLOYED_URL}/${req.file.filename}` 
 

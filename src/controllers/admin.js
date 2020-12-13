@@ -41,7 +41,8 @@ const createsubAdmin = async (req, res) => {
 
 const adminLogin = async (req, res) => {
     try {
-        const admin = await Admin.findByCredentials(req.body.email, req.body.password)
+        req.body.active = true
+        const admin = await Admin.findByCredentials(req.body.email, req.body.password, req.body.active)
         const token = await admin.generateAuthToken()
         res.status(200).json(success({ admin, token }))
     } catch (error) {
@@ -136,6 +137,10 @@ const logoutAll = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
+    const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
+    if(!permission) {
+        res.status(401).json(errorUnauthorized('Error. Unauthorized user'))
+    }
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'number']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
