@@ -43,7 +43,7 @@ const adminLogin = async (req, res) => {
     try {
         const admin = await Admin.findByCredentials(req.body.email, req.body.password) 
         if(admin.active === false) {
-            res.status(400).json(errorout('Bad request', 'Email or Password incorrect')) 
+            res.status(400).json(errorout('Bad request', 'Unauthorized Access')) 
             console.log('error mehn')
         }
         const token = await admin.generateAuthToken()
