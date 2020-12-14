@@ -85,6 +85,23 @@ const markAsResolved = async (req, res) => {
     }
 }
 
+const markAsInProgress = async (req, res) => { 
+    try {
+        req.body.active = inProgress;
+
+        const quotes = await Quotes.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!quotes) {
+            return res.status(404).json(errorout('Bad request', 'Quote not found'))
+        }
+
+        await quotes.save()
+        res.status(200).json(success({ quotes }))
+    } catch (e) {
+        res.status(500).json({message: e.message})
+    }
+}
+
 
 const singleQuote = async (req, res) => { 
     const _id = req.params.id
@@ -117,4 +134,4 @@ const deleteQuote = async (req, res) => {
     }
 }
 
-module.exports = { createQuote, viewQuotes, markAsResolved, markAsPending, singleQuote, deleteQuote }
+module.exports = { createQuote, viewQuotes, markAsInProgress, markAsResolved, markAsPending, singleQuote, deleteQuote }

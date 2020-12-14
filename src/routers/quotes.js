@@ -1,6 +1,6 @@
 const express = require('express')
 const authAdmin = require('../middleware/authAdmin')
-const { createQuote, viewQuotes, markAsResolved, markAsPending, singleQuote, deleteQuote } = require('../controllers/quotes')
+const { createQuote, viewQuotes, markAsInProgress, markAsResolved, markAsPending, singleQuote, deleteQuote } = require('../controllers/quotes')
 const upload = require('../middleware/multer')
 const router = new express.Router()   
 
@@ -21,6 +21,9 @@ router.patch('/quotes/pending/:id', authAdmin, markAsPending)
 
 // Mark quote as resolved
 router.patch('/quotes/resolved/:id', authAdmin, markAsResolved)
+
+// Mark Quote as inProgress
+router.patch('/quotes/progress/:id', authAdmin, markAsResolved)
 
 // Admin delete quote
 router.delete('/quotes/:id', authAdmin, deleteQuote)
