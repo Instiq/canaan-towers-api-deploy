@@ -87,7 +87,7 @@ const markAsResolved = async (req, res) => {
 
 const markAsInProgress = async (req, res) => { 
     try {
-        req.body.active = inProgress;
+        req.body.active = 'inProgress';
 
         const quotes = await Quotes.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
