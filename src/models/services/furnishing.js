@@ -1,16 +1,23 @@
 const mongoose = require('mongoose');
 
-const FurnishCarousel = mongoose.model('FurnishCarousel', { 
-    carousel: {
-        type: String
-    }
-}) 
 
-const FurnishSlider = mongoose.model('FurnishSlider', { 
+const furnishCarouselSchema = new mongoose.Schema({
+    carousel: {
+        type: String,
+        required: true
+    }
+},  {
+    timestamps: true
+})
+
+const FurnishCarousel = mongoose.model('FurnishCarousel', furnishCarouselSchema) 
+
+
+const furnishSliderSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
-    }, 
+    },
     title: { 
         type: String,
         required: true
@@ -19,9 +26,14 @@ const FurnishSlider = mongoose.model('FurnishSlider', {
         type: String,
         required: true
     }
+},  {
+    timestamps: true
 })
 
-const FurnishCatalogue = mongoose.model('FurnishCatalogue', { 
+const FurnishSlider = mongoose.model('FurnishSlider', furnishSliderSchema)
+
+
+const furnishCatalogueSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -39,9 +51,12 @@ const FurnishCatalogue = mongoose.model('FurnishCatalogue', {
     },
     specification: { 
         type: String,
-        required: true
     }
+},  {
+    timestamps: true
 })
+
+const FurnishCatalogue = mongoose.model('FurnishCatalogue', furnishCatalogueSchema)
 
 
 module.exports = { FurnishSlider, FurnishCarousel, FurnishCatalogue };

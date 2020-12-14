@@ -1,12 +1,20 @@
 const mongoose = require('mongoose');
 
-const RoadCarousel = mongoose.model('roadCarousel', { 
-    carousel: {
-        type: String
-    }
-}) 
 
-const RoadSlider = mongoose.model('roadSlider', { 
+const roadCarouselSchema = new mongoose.Schema({
+    carousel: {
+        type: String,
+        required: true
+    }
+},  {
+    timestamps: true
+})
+
+
+const RoadCarousel = mongoose.model('roadCarousel', roadCarouselSchema) 
+
+
+const roadSliderSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -19,7 +27,12 @@ const RoadSlider = mongoose.model('roadSlider', {
         type: String,
         required: true
     }
+},  {
+    timestamps: true
 })
+
+
+const RoadSlider = mongoose.model('roadSlider', roadSliderSchema)
 
 
 module.exports = { RoadCarousel, RoadSlider };

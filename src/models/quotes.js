@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-
-const Quotes = mongoose.model('Quotes', {
+const quotesSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true, 
-        trim: true
+        required: true
     },
     email: { 
         type: String,
@@ -39,7 +37,15 @@ const Quotes = mongoose.model('Quotes', {
     },
     image: { 
         type: String
+    },
+    active: {
+        type: Boolean,
+        required: true
     }
-})
+}, {
+    timestamps: true
+}) 
 
-module.exports = Quotes; 
+const Quotes = mongoose.model('Quotes', quotesSchema)
+
+module.exports = Quotes;  

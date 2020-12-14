@@ -11,8 +11,8 @@ const { success, errorUnauthorized, errorout } = require('../responseFormatter/r
 //             data: { admin, token }
 //         })
 //     } catch (e) {
-//         res.status(400).send()
-//     }
+//         res.status(400).send() 
+//     } 
 // }
 const createAdmin = async (req, res) => {
     const admin = new Admin({ ...req.body, role: '1', active: true })
@@ -49,7 +49,7 @@ const adminLogin = async (req, res) => {
         const token = await admin.generateAuthToken()
         res.status(200).json(success({ admin, token }))
     } catch (error) {
-        res.status(400).json(errorout('Bad request', error.message)) 
+        res.status(400).json(errorout('Bad request', error.message))  
     }
 }
 

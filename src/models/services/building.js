@@ -1,16 +1,23 @@
 const mongoose = require('mongoose');
 
 
-const BuildingCarousel = mongoose.model('BuildingCarousel', { 
+const buildingCarouselSchema = new mongoose.Schema({
     carousel: {
-        type: String
+        type: String,
+        required: true
     }
-}) 
+},  {
+    timestamps: true
+})
 
-const BuildSlider = mongoose.model('BuildSlider', { 
+const BuildingCarousel = mongoose.model('BuildingCarousel', buildingCarouselSchema) 
+
+
+const buildingSliderSchema = new mongoose.Schema({
     image: { 
-        type: String
-    }, 
+        type: String,
+        required: true
+    },
     title: { 
         type: String,
         required: true
@@ -19,7 +26,11 @@ const BuildSlider = mongoose.model('BuildSlider', {
         type: String,
         required: true
     }
-}) 
+},  {
+    timestamps: true
+})
+
+const BuildSlider = mongoose.model('BuildSlider', buildingSliderSchema) 
 
 
 module.exports = { BuildingCarousel, BuildSlider };

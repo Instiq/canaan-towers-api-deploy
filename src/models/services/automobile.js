@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
 
-const AutomobileCarousel = mongoose.model('AutomobileCarousel', { 
+const automobileCarouselSchema = new mongoose.Schema({
     carousel: {
-        type: String
+        type: String,
+        required: true
     }
-}) 
+},  {
+    timestamps: true
+})
 
-const AutomobileSlider = mongoose.model('AutomobileSlider', { 
+const AutomobileCarousel = mongoose.model('AutomobileCarousel', automobileCarouselSchema) 
+
+
+const automobileSliderSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -19,9 +25,14 @@ const AutomobileSlider = mongoose.model('AutomobileSlider', {
         type: String,
         required: true
     }
+},  {
+    timestamps: true
 })
 
-const AutomobileCatalogue = mongoose.model('AutomobileCatalogue', { 
+
+const AutomobileSlider = mongoose.model('AutomobileSlider', automobileSliderSchema)
+
+const automobileCatalogueSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -31,8 +42,7 @@ const AutomobileCatalogue = mongoose.model('AutomobileCatalogue', {
         required: true
     },
     price: { 
-        type: String,
-        required: true
+        type: String
     },
     description: { 
         type: String,
@@ -40,9 +50,12 @@ const AutomobileCatalogue = mongoose.model('AutomobileCatalogue', {
     },
     specification: { 
         type: String,
-        required: true
     }
+},  {
+    timestamps: true
 })
+
+const AutomobileCatalogue = mongoose.model('AutomobileCatalogue', automobileCatalogueSchema)
 
 
 module.exports = { AutomobileSlider, AutomobileCarousel, AutomobileCatalogue };

@@ -30,7 +30,7 @@ const adminSchema = new mongoose.Schema({
                 throw new Error('Invalid phone number');
             }
         }
-    },
+    }, 
     password: {
         type: String,
         required: true,
@@ -48,8 +48,8 @@ const adminSchema = new mongoose.Schema({
         }
     }],
     role: {
-       type: String,
-       required: true 
+        type: String,
+        required: true 
     },
     active: {
         type: Boolean,
@@ -113,6 +113,6 @@ adminSchema.pre('save', async function (next) {
     next()
 })
 
-const Admin = mongoose.model('Admin', adminSchema )
+const Admin = mongoose.model('Admin', adminSchema)
 
-module.exports = Admin;
+module.exports = Admin; 

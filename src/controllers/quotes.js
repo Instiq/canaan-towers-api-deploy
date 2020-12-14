@@ -4,33 +4,36 @@ const { success, errorout } = require('../responseFormatter/response')
 
 
 const createQuote = async (req, res) => {
+    req.body.active = true
     if(req.file) {
         const quotes = new Quotes({
             ...req.body,
-            image: `${process.env.DEPLOYED_URL}/${req.file.filename}`,
+            image: `${process.env.DEPLOYED_URL}/${req.file.filename}`
         })
         try {
             await quotes.save()
+            notifyCustomerQuoteSent(req.body.email, req.body.name)
+            notifyAdminQuoteSent(req.body.name)
             res.status(201).json(success({ quotes }))
         } catch (error) {
             res.status(400).json(errorout('Bad request', error.message)) 
         } 
-    } else {
+    } else { 
         const quotes = new Quotes({
             ...req.body
         }) 
         try {
             await quotes.save()
-            res.status(201).json(success({ quotes }))
             notifyCustomerQuoteSent(req.body.email, req.body.name)
             notifyAdminQuoteSent(req.body.name)
+            res.status(201).json(success({ quotes }))
         } catch (error) {
             res.status(400).json(errorout('Bad request', error.message)) 
         }
     }
 } 
 
- 
+
 const viewQuotes = async (req, res) => {
     try {
         const pagination = req.query.pagination ? parseInt(req.query.pagination) : 10;
@@ -46,6 +49,42 @@ const viewQuotes = async (req, res) => {
         res.status(500).json({message: error.message}) 
     }
 }
+
+
+const markAsPending = async (req, res) => { 
+    try {
+        req.body.active = true;
+
+        const quotes = await Quotes.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!quotes) {
+            return res.status(404).json(errorout('Bad request', 'Quote not found'))
+        }
+
+        await quotes.save()
+        res.status(200).json(success({admin }))
+    } catch (e) {
+        res.status(500).json({message: e.message})
+    }
+}
+
+const markAsResolved = async (req, res) => { 
+    try {
+        req.body.active = false;
+
+        const quotes = await Quotes.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    
+        if (!quotes) {
+            return res.status(404).json(errorout('Bad request', 'Quote not found'))
+        }
+
+        await quotes.save()
+        res.status(200).json(success({admin }))
+    } catch (e) {
+        res.status(500).json({message: e.message})
+    }
+}
+
 
 const singleQuote = async (req, res) => { 
     const _id = req.params.id
@@ -78,4 +117,4 @@ const deleteQuote = async (req, res) => {
     }
 }
 
-module.exports = { createQuote, viewQuotes, singleQuote, deleteQuote }
+module.exports = { createQuote, viewQuotes, markAsResolved, markAsPending, singleQuote, deleteQuote }

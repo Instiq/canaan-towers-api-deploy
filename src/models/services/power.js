@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 
-const PowerCarousel = mongoose.model('PowerCarousel', { 
-    carousel: {
-        type: String
-    }
-}) 
 
-const PowerSlider = mongoose.model('PowerSlider', { 
+const powerCarouselSchema = new mongoose.Schema({
+    carousel: {
+        type: String,
+        required: true
+    }
+},  {
+    timestamps: true
+})
+
+const PowerCarousel = mongoose.model('PowerCarousel', powerCarouselSchema) 
+
+
+const powerSliderSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -19,9 +26,14 @@ const PowerSlider = mongoose.model('PowerSlider', {
         type: String,
         required: true
     }
+},  {
+    timestamps: true
 })
 
-const PowerCatalogue = mongoose.model('PowerCatalogue', { 
+const PowerSlider = mongoose.model('PowerSlider', powerSliderSchema)
+
+
+const powerCatalogueSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -39,9 +51,12 @@ const PowerCatalogue = mongoose.model('PowerCatalogue', {
     },
     specification: { 
         type: String,
-        required: true
     }
+},  {
+    timestamps: true
 })
+
+const PowerCatalogue = mongoose.model('PowerCatalogue', powerCatalogueSchema)
 
 
 module.exports = { PowerSlider, PowerCarousel, PowerCatalogue };

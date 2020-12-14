@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 
-const RoofCarousel = mongoose.model('RoofCarousel', { 
-    carousel: {
-        type: String
-    }
-}) 
 
-const RoofSlider = mongoose.model('RoofSlider', { 
+const roofCarouselSchema = new mongoose.Schema({
+    carousel: {
+        type: String,
+        required: true
+    }
+},  {
+    timestamps: true
+})
+
+const RoofCarousel = mongoose.model('RoofCarousel', roofCarouselSchema) 
+
+
+const roofSliderSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -19,9 +26,14 @@ const RoofSlider = mongoose.model('RoofSlider', {
         type: String,
         required: true
     }
+},  {
+    timestamps: true
 })
 
-const RoofCatalogue = mongoose.model('RoofCatalogue', { 
+const RoofSlider = mongoose.model('RoofSlider', roofSliderSchema)
+
+
+const roofCatalogueSchema = new mongoose.Schema({
     image: { 
         type: String,
         required: true
@@ -39,9 +51,12 @@ const RoofCatalogue = mongoose.model('RoofCatalogue', {
     },
     specification: { 
         type: String,
-        required: true
     }
+},  {
+    timestamps: true
 })
+
+const RoofCatalogue = mongoose.model('RoofCatalogue', roofCatalogueSchema)
 
 
 module.exports = { RoofSlider, RoofCarousel, RoofCatalogue };
