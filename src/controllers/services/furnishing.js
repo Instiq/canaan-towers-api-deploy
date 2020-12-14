@@ -141,15 +141,16 @@ const updateCatalogue =  async (req, res) => {
     const allowedUpdates = ['price', 'description', 'item', 'specification']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
     console.log('g', isValidOperation, req.body)
-    if (!isValidOperation || !req.file) {
-        return res.status(400).json(errorout('Bad request',  'Invalid updates!'))
+    if (!isValidOperation) {
+        return res.status(400).json(errorout('Bad request',  'Invalid updatesss!'))
     }
 
+    if(req.file) {
+        let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
+        req.body = { ...req.body, image }
+    }
 
-    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
-    req.body.price = `₦${req.body.price}`
-
-    req.body = { ...req.body, image }
+    // req.body.price = `₦${req.body.price}`
     
     try {
         const furnishCatalogue = await FurnishCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })

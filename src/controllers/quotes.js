@@ -62,7 +62,7 @@ const markAsPending = async (req, res) => {
         }
 
         await quotes.save()
-        res.status(200).json(success({admin }))
+        res.status(200).json(success({ quotes }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }
@@ -79,7 +79,7 @@ const markAsResolved = async (req, res) => {
         }
 
         await quotes.save()
-        res.status(200).json(success({admin }))
+        res.status(200).json(success({ quotes }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

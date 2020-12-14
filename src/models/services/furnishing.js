@@ -35,8 +35,7 @@ const FurnishSlider = mongoose.model('FurnishSlider', furnishSliderSchema)
 
 const furnishCatalogueSchema = new mongoose.Schema({
     image: { 
-        type: String,
-        required: true
+        type: String
     },
     item: { 
         type: String,
