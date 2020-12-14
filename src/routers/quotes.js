@@ -23,7 +23,7 @@ router.patch('/quotes/pending/:id', authAdmin, markAsPending)
 router.patch('/quotes/resolved/:id', authAdmin, markAsResolved)
 
 // Mark Quote as inProgress
-router.patch('/quotes/progress/:id', authAdmin, markAsResolved)
+router.patch('/quotes/progress/:id', authAdmin, markAsInProgress)
 
 // Admin delete quote
 router.delete('/quotes/:id', authAdmin, deleteQuote)
