@@ -4,7 +4,7 @@ const { success, errorout } = require('../responseFormatter/response')
 
 
 const createQuote = async (req, res) => {
-    req.body.active = true
+    req.body.active = 'true'
     if(req.file) {
         const quotes = new Quotes({
             ...req.body,
@@ -53,7 +53,7 @@ const viewQuotes = async (req, res) => {
 
 const markAsPending = async (req, res) => { 
     try {
-        req.body.active = true;
+        req.body.active = 'true';
 
         const quotes = await Quotes.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     
@@ -70,7 +70,7 @@ const markAsPending = async (req, res) => {
 
 const markAsResolved = async (req, res) => { 
     try {
-        req.body.active = false;
+        req.body.active = 'false';
 
         const quotes = await Quotes.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     

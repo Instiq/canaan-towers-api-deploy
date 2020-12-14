@@ -39,7 +39,7 @@ const quotesSchema = new mongoose.Schema({
         type: String
     },
     active: {
-        type: Boolean,
+        type: String,
         required: true
     }
 }, {
