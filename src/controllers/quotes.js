@@ -39,7 +39,6 @@ const viewQuotes = async (req, res) => {
         const pagination = req.query.pagination ? parseInt(req.query.pagination) : 10;
         const page = req.query.page ? parseInt(req.query.page) : 1;
         const count = await Quotes.countDocuments({}).exec();
-        console.log('docCount', count)
         const quotes = await Quotes.find({})
         .limit(pagination)
         .skip((page - 1) * pagination)

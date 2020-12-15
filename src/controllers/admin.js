@@ -1,5 +1,6 @@
 const Admin = require('../models/admin')
 const { success, errorUnauthorized, errorout } = require('../responseFormatter/response')
+const bcrypt = require('bcryptjs')
 
 // const adminLogin = async (req, res) => {
 //     try {
@@ -44,7 +45,6 @@ const adminLogin = async (req, res) => {
         const admin = await Admin.findByCredentials(req.body.email, req.body.password) 
         if(admin.active === false) {
             res.status(400).json(errorout('Bad request', 'Unauthorized Access')) 
-            console.log('error mehn')
         }
         const token = await admin.generateAuthToken()
         res.status(200).json(success({ admin, token }))
@@ -141,22 +141,30 @@ const logoutAll = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'email', 'password', 'number']
+    const allowedUpdates = ['name', 'email', 'password', 'number', 'prepassword']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
         return res.status(400).json(errorout('Bad request', 'Invalid updates'))
     }
+    
+    if(req.body.password && !req.body.prepassword) {
+        return res.status(400).json(errorout('Bad request', 'Invalid updates'))
+    }
 
-    if(!req.body.password) {
-        
+    if(req.body.password && req.body.prepassword) {
+        const admin = await Admin.findOne({ _id: req.id })
+        const isMatch = await bcrypt.compare(req.body.prepassword, admin.password)
+        if (!isMatch) {
+            return res.status(400).json(errorout('Bad request', 'Invalid updates'))
+        }
     }
 
     try {
         updates.forEach((update) => req.admin[update] = req.body[update])
         await req.admin.save()
-        let update = req.admin
-        res.status(200).json(success({ update }))
+        let admin = req.admin
+        res.status(200).json(success({ admin }))
     } catch (e) {
         res.status(500).json({message: e.message})
     }

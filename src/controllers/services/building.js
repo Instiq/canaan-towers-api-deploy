@@ -82,7 +82,6 @@ const updateSlider = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['title', 'description']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log(isValidOperation);
 
     if (!isValidOperation || !req.file) {
         return res.status(400).json(errorout('Bad request',  'Invalid updates!'))

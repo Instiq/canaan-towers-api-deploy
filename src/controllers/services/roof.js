@@ -142,7 +142,6 @@ const updateCatalogue = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['price', 'description', 'item', 'specification']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log('g', isValidOperation, req.body)
     if (!isValidOperation || !req.file) {
         return res.status(400).json(errorout('Bad request',  'Invalid updates!'))
     }

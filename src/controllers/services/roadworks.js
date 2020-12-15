@@ -3,7 +3,6 @@ const { success, errorout } = require('../../responseFormatter/response')
 
 
 const addCarousel = async (req, res) => {
-    console.log(req.file)
     if(!req.file) {
         res.status(400).json(errorout('Bad request', 'You need to upload an image'))
     }
@@ -89,7 +88,6 @@ const updateSlider = async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['title', 'description']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
-    console.log(isValidOperation);
 
     if (!isValidOperation || !req.file) {
         return res.status(400).json(errorout('Bad request','Invalid updates!' ))
