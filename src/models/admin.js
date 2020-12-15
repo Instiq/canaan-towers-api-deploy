@@ -29,7 +29,7 @@ const adminSchema = new mongoose.Schema({
             if (value < 11) {
                 throw new Error('Invalid phone number');
             }
-        }
+        } 
     }, 
     password: {
         type: String,

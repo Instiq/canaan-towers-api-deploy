@@ -127,7 +127,7 @@ const singleLogout = async (req, res) => {
     } catch (e) {
         res.status(500).json({message: e.message})
     }
-}
+} 
 
 const logoutAll = async (req, res) => {
     try {
@@ -140,10 +140,6 @@ const logoutAll = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-    const permission = await Admin.findOne({ _id: req.id, 'role': '1' })
-    if(!permission) {
-        res.status(401).json(errorUnauthorized('Error. Unauthorized user'))
-    }
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'number']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))

@@ -29,7 +29,7 @@ router.get('/admins', authAdmin, viewsubAdmin)
 // Really needed ????? 
 router.get('/admin/profile', authAdmin, async (req, res) => { 
     res.send(req.admin)
-})
+}) 
 
 
 router.post('/admin/logout', authAdmin, singleLogout)
