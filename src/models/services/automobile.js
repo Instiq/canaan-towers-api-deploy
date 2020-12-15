@@ -34,8 +34,7 @@ const AutomobileSlider = mongoose.model('AutomobileSlider', automobileSliderSche
 
 const automobileCatalogueSchema = new mongoose.Schema({
     image: { 
-        type: String,
-        required: true
+        type: String
     },
     item: { 
         type: String,

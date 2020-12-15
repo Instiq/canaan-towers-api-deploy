@@ -148,10 +148,10 @@ const updateCatalogue = async (req, res) => {
     }
 
 
-    let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
-    req.body.price = `₦${req.body.price}`
-
-    req.body = { ...req.body, image }
+    if(req.file) {
+        let image = `${process.env.DEPLOYED_URL}/${req.file.filename}`
+        req.body = { ...req.body, image }
+    }
     
     try {
         const roofCatalogue = await RoofCatalogue.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })

@@ -35,8 +35,7 @@ const PowerSlider = mongoose.model('PowerSlider', powerSliderSchema)
 
 const powerCatalogueSchema = new mongoose.Schema({
     image: { 
-        type: String,
-        required: true
+        type: String
     },
     item: { 
         type: String,

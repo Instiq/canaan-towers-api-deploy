@@ -148,6 +148,10 @@ const updateProfile = async (req, res) => {
         return res.status(400).json(errorout('Bad request', 'Invalid updates'))
     }
 
+    if(!req.body.password) {
+        
+    }
+
     try {
         updates.forEach((update) => req.admin[update] = req.body[update])
         await req.admin.save()

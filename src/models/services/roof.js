@@ -35,8 +35,7 @@ const RoofSlider = mongoose.model('RoofSlider', roofSliderSchema)
 
 const roofCatalogueSchema = new mongoose.Schema({
     image: { 
-        type: String,
-        required: true
+        type: String
     },
     item: { 
         type: String,
@@ -50,7 +49,7 @@ const roofCatalogueSchema = new mongoose.Schema({
         required: true
     },
     specification: { 
-        type: String,
+        type: String
     }
 },  {
     timestamps: true
