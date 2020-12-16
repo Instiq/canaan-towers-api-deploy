@@ -29,7 +29,7 @@ const port = process.env.PORT;
 app.use(helmet());
 app.options('*', cors());
 
-var allowedOrigins = ['http://localhost:8080','http://localhost:8081', 'https://canaantowersb.netlify.app'];
+var allowedOrigins = ['http://localhost:8080','http://localhost:8081', 'http://canaantowersltd.com', 'https://canaantowersb.netlify.app'];
 app.use(cors({
   origin: function(origin, callback) {
     if(!origin) return callback(null, true);
