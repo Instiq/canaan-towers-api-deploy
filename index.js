@@ -1,22 +1,19 @@
 const express = require('express'); 
-const connectDB = require('./db/mongoose');
+const connectDB = require('./src/db/mongoose')();
 const cors = require('cors')
 const helmet = require("helmet");
 var bodyParser = require('body-parser')
-const userRouter = require('./routers/users');
-const adminRouter = require('./routers/admin');
-const quotesRouter = require('./routers/quotes');
-const buildingRouter = require('./routers/services/building');
-const furnishRouter = require('./routers/services/furnishing');
-const automobileRouter = require('./routers/services/automobile');
-const powerRouter = require('./routers/services/power');
-const roadworkRouter = require('./routers/services/roadworks');
-const roofRouter = require('./routers/services/roof');
+const userRouter = require('./src/routers/users');
+const adminRouter = require('./src/routers/admin');
+const quotesRouter = require('./src/routers/quotes');
+const buildingRouter = require('./src/routers/services/building');
+const furnishRouter = require('./src/routers/services/furnishing');
+const automobileRouter = require('./src/routers/services/automobile');
+const powerRouter = require('./src/routers/services/power');
+const roadworkRouter = require('./src/routers/services/roadworks');
+const roofRouter = require('./src/routers/services/roof');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
-
-
-connectDB();
+const swaggerDocument = require('./src/swagger.json');
 
 const app = express();
 
